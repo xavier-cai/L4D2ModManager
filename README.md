@@ -26,7 +26,7 @@ The screen shot of software is just like below :
 - Download MODs without launching game
 
 ## How to download it
-Here is the ZIP file link : [Download](./Release/Release.zip)
+Here is the ZIP file link : [Download](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
 
 ## Development environment
 - .NET 4.5.2
@@ -81,7 +81,7 @@ cxw39@foxmail.com
 - 在软件内完成MOD的下载等操作
 
 ## 下载方式
-压缩包下载链接：[下载](./Release/Release.zip)
+压缩包下载链接：[下载](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
 
 ## 开发环境
 - .NET 4.5.2
