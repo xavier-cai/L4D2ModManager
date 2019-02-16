@@ -44,6 +44,7 @@ Thanks for these excellent works, you guys really help me a lot!
 - [Facepunch/Steamworks](https://github.com/Facepunch/Facepunch.Steamworks) Steam APIs in C#
 - [maddnias/SharpVPK](https://github.com/maddnias/SharpVPK) Read VPK files
 - The Mozilla Universal Character Encoding Detector, I get it from [here](https://github.com/lucentsky/UniversalCharsetDetection)
+
 I did some changes in these works for fixing bugs or extend them, you can see the changes in `ForkInfo.txt`.
 
 ## License
@@ -98,6 +99,7 @@ cxw39@foxmail.com
 - [Facepunch/Steamworks](https://github.com/Facepunch/Facepunch.Steamworks) Steam APIs in C#
 - [maddnias/SharpVPK](https://github.com/maddnias/SharpVPK) 读取VPK文件
 - The Mozilla Universal Character Encoding Detector, Mozilla的字符编码检测程序，我从[这里](https://github.com/lucentsky/UniversalCharsetDetection)下载的源码
+
 这些项目我做了一些改动来修复BUG或者完善了程序, 修改的内容纪录在 `ForkInfo.txt`里面.
 
 ## 许可协议
