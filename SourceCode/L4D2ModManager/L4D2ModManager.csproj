@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6F3E19C9-6E03-4EC4-A1A3-585783BF9283}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>L4D2ModManager</RootNamespace>
+    <AssemblyName>L4D2ModManager</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon128.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="BindingConverter\ListviewTooltipConverter.cs" />
+    <Compile Include="BindingConverter\ListviewCollisionColorConverter.cs" />
+    <Compile Include="BindingConverter\ListviewRowColorConverter.cs" />
+    <Compile Include="CategorySelecter.cs" />
+    <Compile Include="Configure.cs" />
+    <Compile Include="CSSTL\Set.cs" />
+    <Compile Include="CtlExtension.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\BaseSteamworks.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Callbacks\Index.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Achievements.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\App.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Auth.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Friends.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Image.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Leaderboard.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Lobby.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Lobby.LobbyData.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\LobbyList.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\LobbyList.Lobby.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\MicroTransactions.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Overlay.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\RemoteStorage.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\RemoteStorage.File.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\RemoteStorage.FileStream.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Screenshots.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\ServerList.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\ServerList.Request.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\ServerList.Server.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Stats.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\SteamFriend.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\User.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Client\Voice.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Config.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\EncodingHelper.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Inventory.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Inventory.Definition.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Inventory.Item.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Inventory.Result.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Networking.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Workshop.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Workshop.Editor.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Workshop.Item.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interfaces\Workshop.Query.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Interop\Native.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Server.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Server\Auth.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Server\Query.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Server\ServerInit.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Server\Stats.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Callback.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Constants.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Enums.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Helpers.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.Interface.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.Linux32.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.Linux64.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.Mac.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.Win32.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Platform.Win64.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamApi.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamAppList.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamApps.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamClient.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamController.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamFriends.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamGameServer.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamGameServerStats.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamHTMLSurface.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamHTTP.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamInventory.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamMatchmaking.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamMatchmakingServers.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamMusic.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamMusicRemote.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamNetworking.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamParentalSettings.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamRemoteStorage.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamScreenshots.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamUGC.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamUser.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamUserStats.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamUtils.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.SteamVideo.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Structs.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Types.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Utility.cs" />
+    <Compile Include="Fork\Facepunch.Steamworks\Utility\SourceServerQuery.cs" />
+    <Compile Include="L4D2MM.cs" />
+    <Compile Include="L4D2Mod.cs" />
+    <Compile Include="L4D2Resource.cs" />
+    <Compile Include="L4D2TxtReader.cs" />
+    <Compile Include="L4D2Type.cs" />
+    <Compile Include="LanguageHelper.cs" />
+    <Compile Include="BindingConverter\ListviewCellColorConverter.cs" />
+    <Compile Include="Logging.cs" />
+    <Compile Include="Fork\SharpVPK\ArchivePart.cs" />
+    <Compile Include="Fork\SharpVPK\Exceptions\ArchiveParsingException.cs" />
+    <Compile Include="Fork\SharpVPK\IVpkArchiveHeader.cs" />
+    <Compile Include="Fork\SharpVPK\V1\VpkArchiveHeaderV1.cs" />
+    <Compile Include="Fork\SharpVPK\V1\VpkReaderV1.cs" />
+    <Compile Include="Fork\SharpVPK\V2\VpkArchiveHeaderV2.cs" />
+    <Compile Include="Fork\SharpVPK\V2\VpkReaderV2.cs" />
+    <Compile Include="Fork\SharpVPK\VpkArchive.cs" />
+    <Compile Include="Fork\SharpVPK\VpkDirectory.cs" />
+    <Compile Include="Fork\SharpVPK\VpkEntry.cs" />
+    <Compile Include="Fork\SharpVPK\VpkReaderBase.cs" />
+    <Compile Include="SteamAppId.cs" />
+    <Compile Include="StringAdapter.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\ByteBuffer.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Constants.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\ICharsetListener.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Big5Prober.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\CharsetProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\ContextAnalysis\EUCJPContextAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\ContextAnalysis\JapaneseContextAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\ContextAnalysis\SJISContextAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\Big5DistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\CharDistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\EUCJPDistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\EUCKRDistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\EUCTWDistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\GB2312DistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\JISDistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\DistributionAnalysis\SJISDistributionAnalysis.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\EscCharsetProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\EUCJPProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\EUCKRProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\EUCTWProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\GB18030Prober.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\HebrewProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Latin1Prober.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\MBCSGroupProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\SBCSGroupProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\BulgarianModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\CyrillicModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\GreekModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\HebrewModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Ibm855Model.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Ibm866Model.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Koi8rModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Latin5BulgarianModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Latin5Model .cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Latin7Model.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\MacCyrillicModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\SequenceModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Win1251BulgarianModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Win1251Model.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\Sequence\Win1253Model.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\SingleByteCharsetProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\SJISProber.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\Big5SMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\CodingStateMachine.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\EUCJPSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\EUCKRSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\EUCTWSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\GB18030SMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\HZSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\ISO2022CNSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\ISO2022JPSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\ISO2022KRSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\PkgInt.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\SJISSMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\SMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\UCS2BESMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\StateMachine\UTF8SMModel.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\Prober\UTF8Prober.cs" />
+    <Compile Include="Fork\UniversalCharacterDetection\UniversalDetector.cs" />
+    <Compile Include="ViewItem.cs" />
+    <Compile Include="WebHelper.cs" />
+    <Compile Include="WindowCallbacks.cs" />
+    <Compile Include="WinformAdapter.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Resources\Langs\en-US.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Langs\zh-CN.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\Icon\icon.psd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Fork\SharpVPK\ForkInfo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Facepunch.Steamworks.dll" />
+    <Resource Include="icon128.ico" />
+    <Content Include="Newtonsoft.Json.dll" />
+    <Resource Include="Resources\Icon\icon.png" />
+    <Resource Include="Resources\Icon\icon128.ico" />
+    <Content Include="steam_api.dll" />
+    <Content Include="steam_api64.dll" />
+    <Content Include="Fork\UniversalCharacterDetection\UniversalCharacterDetection.csproj" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

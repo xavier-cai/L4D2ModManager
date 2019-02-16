@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB97F8B6-09B1-455A-AFCA-A538F9B0E16A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UniversalCharacterDetection</RootNamespace>
+    <AssemblyName>UniversalCharacterDetection</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ByteBuffer.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ICharsetListener.cs" />
+    <Compile Include="Prober\Big5Prober.cs" />
+    <Compile Include="Prober\CharsetProber.cs" />
+    <Compile Include="Prober\ContextAnalysis\EUCJPContextAnalysis.cs" />
+    <Compile Include="Prober\ContextAnalysis\JapaneseContextAnalysis.cs" />
+    <Compile Include="Prober\ContextAnalysis\SJISContextAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\Big5DistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\CharDistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\EUCJPDistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\EUCKRDistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\EUCTWDistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\GB2312DistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\JISDistributionAnalysis.cs" />
+    <Compile Include="Prober\DistributionAnalysis\SJISDistributionAnalysis.cs" />
+    <Compile Include="Prober\EscCharsetProber.cs" />
+    <Compile Include="Prober\EUCJPProber.cs" />
+    <Compile Include="Prober\EUCKRProber.cs" />
+    <Compile Include="Prober\EUCTWProber.cs" />
+    <Compile Include="Prober\GB18030Prober.cs" />
+    <Compile Include="Prober\HebrewProber.cs" />
+    <Compile Include="Prober\Latin1Prober.cs" />
+    <Compile Include="Prober\MBCSGroupProber.cs" />
+    <Compile Include="Prober\SBCSGroupProber.cs" />
+    <Compile Include="Prober\Sequence\BulgarianModel.cs" />
+    <Compile Include="Prober\Sequence\CyrillicModel.cs" />
+    <Compile Include="Prober\Sequence\GreekModel.cs" />
+    <Compile Include="Prober\Sequence\HebrewModel.cs" />
+    <Compile Include="Prober\Sequence\Ibm855Model.cs" />
+    <Compile Include="Prober\Sequence\Ibm866Model.cs" />
+    <Compile Include="Prober\Sequence\Koi8rModel.cs" />
+    <Compile Include="Prober\Sequence\Latin5BulgarianModel.cs" />
+    <Compile Include="Prober\Sequence\Latin5Model .cs" />
+    <Compile Include="Prober\Sequence\Latin7Model.cs" />
+    <Compile Include="Prober\Sequence\MacCyrillicModel.cs" />
+    <Compile Include="Prober\Sequence\SequenceModel.cs" />
+    <Compile Include="Prober\Sequence\Win1251BulgarianModel.cs" />
+    <Compile Include="Prober\Sequence\Win1251Model.cs" />
+    <Compile Include="Prober\Sequence\Win1253Model.cs" />
+    <Compile Include="Prober\SingleByteCharsetProber.cs" />
+    <Compile Include="Prober\SJISProber.cs" />
+    <Compile Include="Prober\StateMachine\Big5SMModel.cs" />
+    <Compile Include="Prober\StateMachine\CodingStateMachine.cs" />
+    <Compile Include="Prober\StateMachine\EUCJPSMModel.cs" />
+    <Compile Include="Prober\StateMachine\EUCKRSMModel.cs" />
+    <Compile Include="Prober\StateMachine\EUCTWSMModel.cs" />
+    <Compile Include="Prober\StateMachine\GB18030SMModel.cs" />
+    <Compile Include="Prober\StateMachine\HZSMModel.cs" />
+    <Compile Include="Prober\StateMachine\ISO2022CNSMModel.cs" />
+    <Compile Include="Prober\StateMachine\ISO2022JPSMModel.cs" />
+    <Compile Include="Prober\StateMachine\ISO2022KRSMModel.cs" />
+    <Compile Include="Prober\StateMachine\PkgInt.cs" />
+    <Compile Include="Prober\StateMachine\SJISSMModel.cs" />
+    <Compile Include="Prober\StateMachine\SMModel.cs" />
+    <Compile Include="Prober\StateMachine\UCS2BESMModel.cs" />
+    <Compile Include="Prober\StateMachine\UTF8SMModel.cs" />
+    <Compile Include="Prober\UTF8Prober.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UniversalDetector.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

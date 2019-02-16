@@ -1,0 +1,21 @@
+CHANGE LOG
+
+Issue 1.
+Problem: ArgumentException in function ReadNullTerminatedString in VpkReaderBase.cs.
+Reason: File name in vpk file include Unicode or some other encoding char, the ReadChar function of BinaryReader can not handle it successfully.
+Solution: Change the code 'Reader.ReadChar()' to '(char)Reader.ReaderByte()'.
+
+Issue 2.
+Problem: Call the function Data/ReadData of VpkEntry faild.
+Reason: The ArchiveIndex handle incorrect in single vpk file mode (see more: https://developer.valvesoftware.com/wiki/VPK_File_Format)
+Solution: Append the judgement process of ArchiveIndex, if the value is 0x7fff, use parent archive path as current archive path.
+
+Issue 3.
+Problem: Extracted data is incorrected in single vpk file mode.
+Reason: The offset of entry used in function ReadData in VpkEntry.cs is incorrected.
+Solution: Record/Save the archive offset in parent archive. When data is saved in parent archive, add it. (just like '(ArchiveIndex == 0x7fff ? ParentArchive.ArchiveOffset : 0) + EntryOffset' in code).
+
+Issue 4.
+Problem: Directories with same path coexsit in archive.
+Reason: In vpk tree, same path with different extension name will be regard as different directories.
+Solution: Add a member function named MergeDirectories for VpkArchive for merging directories that have same path, call it after load vpk file if needed.

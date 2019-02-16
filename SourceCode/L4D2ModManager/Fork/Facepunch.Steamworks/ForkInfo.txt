@@ -1,0 +1,14 @@
+CHANGE LOG
+
+Change 1.
+Add the FileSize member to Facepunch.Steamworks.Workshop.Item
+
+Issue 1.
+Problem: Information in Workshop.Item such as title and description appear as black squares, or gibberish if it contains some chinese characters or japenese characters.
+Reason: Steam API using UTF-8 encoding and stored in char[], but when it be transformed to string type in C#, it will be decoded by the default encoding type (in my case, it's GB2312).
+Solution: We need ban the automatic decoding and do it manually. So first, change problematic member type in SteamUGCDetails_t (and PackSmall) in SteamNative.Structs.cs from string to byte[] (in the same time, change the marsha type form ByValTStr to ByValArray); Then, using byte[].Decode() to get a string. (I defined this function in a new file named EncodingHelper.cs).
+
+Issue 2
+Problem: Workshop.Query.Block() doesn't help me get Steam API callback result correctly. But if I wait a while after I call the function Workshop.Query.Run() (e.g. set a breakpoint on Block() after Run()), I can get the callback result correctly.
+Reason: In fact, I can not figure out what's the real reaon. I find that both IsAPICallCompleted and GetAPICallResult are return a successful flag, I still can not get a result (see function RunCallback() in SteamNative.Callback.cs), data in buffer/ptr are all zero/0x00.
+Solution: It's a unsafe solution, call the function GetAPICallResult untill the first byte in result we get is not zero/0x00, the first byte in result usually is the result of opration and the type is EResult (see : https://partner.steamgames.com/doc/api/steam_api#EResult), and 0x00 is invalid value in this field.
