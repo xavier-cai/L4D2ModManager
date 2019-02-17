@@ -173,6 +173,7 @@ namespace L4D2ModManager
 
         public void Update(L4D2MM manager)
         {
+            AllViewItems.Clear();
             foreach (var v in manager.Mods)
             {
                 AllViewItems.Add(new ViewItem(v.Value));

@@ -35,7 +35,7 @@
     <s:String x:Key="Info_LoadSteamWorkshopFirstTime">The first time to load Steam workshop maybe cost a longer time</s:String>
     <s:String x:Key="Info_LoadLocalFile">Load local file</s:String>
     <s:String x:Key="Info_UpdateModState">Update MOD state</s:String>
-    <s:String x:Key="Info_ConfirmDelete">The loacl file will be delete at the time.\r\nContinue?</s:String>
+    <s:String x:Key="Info_ConfirmDelete" xml:space="preserve">The loacl file will be delete at the time.&#x0d;&#x0a;Continue?</s:String>
     <s:String x:Key="Info_NoCollision">No coflict</s:String>
     <s:String x:Key="Info_HaveCollision">Exist conflict</s:String>
     <s:String x:Key="Info_IgnoredCollision">Ignored collision</s:String>

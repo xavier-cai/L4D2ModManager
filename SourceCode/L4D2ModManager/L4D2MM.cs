@@ -46,16 +46,7 @@ namespace L4D2ModManager
                 IsHaveCollision = false;
 
                 base.CollisionCountChangeHandler = (count) => { IsHaveCollision = count > 0; };
-
-                if (mod != null)
-                {
-                    foreach (var a in mod.Category)
-                        foreach (var b in mod.SubCategory(a))
-                            base.AddResource(L4D2Resource.GetResource(a, b));
-                }
-
-                if (CanSetOff && !IsIgnoreCollision)
-                    base.Regist();
+                RefreshResources();
             }
             private L4D2MM Manager { get; set; }
             public string Key { get; private set; }
@@ -91,6 +82,19 @@ namespace L4D2ModManager
             public bool IgnoreCollision() { base.Unregist(); return Manager.IgnoreModCollision(Key); }
             public bool DetectCollision() { base.Regist(); return Manager.DetectModCollision(Key); }
             public bool Delete() { base.Unregist(); return Manager.DeleteMod(Key); }
+
+            public void RefreshResources()
+            {
+                if (Mod != null)
+                {
+                    foreach (var a in Mod.Category)
+                        foreach (var b in Mod.SubCategory(a))
+                            base.AddResource(L4D2Resource.GetResource(a, b));
+                }
+
+                if (CanSetOff && !IsIgnoreCollision)
+                    base.Regist();
+            }
         };
 
         Dictionary<string, ModInfo> m_modStates;
@@ -226,9 +230,10 @@ namespace L4D2ModManager
             }
             //for addons
             if (Configure.EnableAddons)
+            {
+                List<ulong> fileIds = new List<ulong>();
                 foreach (FileInfo vpkFile in new DirectoryInfo(path + m_dirAddons).GetFiles("*.vpk")) //from addons
                 {
-
                     //update process bar
                     WindowCallbacks.Process(current, total, StringAdapter.GetInfo("LoadLocalFile") + " : " + vpkFile.Name);
                     string key = vpkFile.Name;
@@ -237,7 +242,32 @@ namespace L4D2ModManager
                     m_modStates.Add(key, info);
                     current++;
                     Logging.Log("load from addons : " + vpkFile.Name);
+                    //check if it is a workshop item
+                    string name = key.Replace(".vpk", "");
+                    if (name.IsNumber() && name.Length >= 8 && name.Length <= 11)
+                        fileIds.Add(ulong.Parse(name));
                 }
+                if (m_steam != null)
+                {
+                    var query = m_steam.Workshop.CreateQuery();
+                    query.FileId = fileIds;
+                    query.Run();
+                    query.Block();
+                    Logging.Assert(!query.IsRunning);
+                    int nResult = query.Items.Length;
+                    foreach (var item in query.Items)
+                    {
+                        ulong id = item.Id;
+                        //Facepunch.Steamworks.Workshop.Item item = m_steam.Workshop.GetItem(v);
+                        if (id > 0)
+                        {
+                            string key = id.ToString() + ".vpk";
+                            Logging.Assert(m_modStates.ContainsKey(key));
+                            m_modStates[key].Mod.LoadItem(item);
+                        }
+                    }
+                }
+            }
             WindowCallbacks.Process(total, total, StringAdapter.GetInfo("LoadComplete"));
             WindowCallbacks.Print(StringAdapter.GetInfo("LoadComplete"));
             WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
@@ -328,6 +358,8 @@ namespace L4D2ModManager
             if (Configure.EnableSteam && m_steam != null)
                 LoadSteamWorkshop();
             LoadLocalFiles(path);
+            foreach (var mod in m_modStates.Values)
+                mod.RefreshResources();
 
             //read the addons list file
             WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
@@ -357,11 +389,11 @@ namespace L4D2ModManager
                 foreach (var v in m_modStates)
                 {
                     var mod = v.Value.Mod;
-                    if(v.Value.Source == ModSource.Workshop && mod.Image == null && mod.ImageURL != "")
+                    if(mod.Image == null && mod.ImageURL != "")
                     {
                         try
                         {
-                            mod.LoadPreviewImageFromURL(m_path + m_dirWorkshop);
+                            mod.LoadPreviewImageFromURL(m_path + (v.Value.Source == ModSource.Workshop ? m_dirWorkshop : m_dirAddons));
                         }
                         catch { }
                     }
@@ -377,9 +409,27 @@ namespace L4D2ModManager
             ModInfo mod = m_modStates[key];
             if (mod.ModState != ModState.Miss)
             {
-                foreach (var v in new DirectoryInfo(mod.Source == ModSource.Player ? m_dirAddons : m_dirWorkshop)
-                    .GetFiles(mod.Mod.FileName.Substring(0, mod.Mod.FileName.LastIndexOf('.')) + ".*"))
-                    v.Delete();
+                if (mod.Mod.Image != null)
+                    mod.Mod.Image.Dispose();
+                //the image file can not be realsed right now
+                new System.Threading.Thread(new System.Threading.ThreadStart(() =>
+                {
+                    int trycount = 0;
+                    while (trycount++ < 10 ) //try 10 times
+                    {
+                        try
+                        {
+                            foreach (var v in new DirectoryInfo(m_path + (mod.Source == ModSource.Player ? m_dirAddons : m_dirWorkshop))
+                               .GetFiles(mod.Mod.FileName.Substring(0, mod.Mod.FileName.LastIndexOf('.')) + ".*"))
+                                v.Delete();
+                            return;
+                        }
+                        catch
+                        {
+                            System.Threading.Thread.Sleep(100);
+                        }
+                    }
+                })).Start();
             }
             m_modStates.Remove(key);
             return true;

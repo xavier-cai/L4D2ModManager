@@ -97,7 +97,7 @@ namespace L4D2ModManager
             WindowCallbacks.SetPrintCallback(PrintOperation);
             WindowCallbacks.SetOperationEnableCallback(EnableOperation);
             WindowCallbacks.SetNotifyUpdateCallback(NotifyUpdate);
-            
+
             LoadModManager();
         }
 
@@ -236,17 +236,20 @@ namespace L4D2ModManager
                     return;
                 var func = menuItemClick[name];
                 int count = 0;
-                foreach(var item in items)
+                object[] copy = new object[items.Count];
+                items.CopyTo(copy, 0);
+                string firstName = (items[0] as ViewItem).Key;
+                foreach (var item in copy)
                 {
                     if (func((item as ViewItem).Mod))
                         count++;
                 }
                 StringBuilder sb = new StringBuilder();
                 sb.Append(StringAdapter.GetResource("Operation") + " : " + (o as MenuItem).Header as string + " : ");
-                if (items.Count > 1)
-                    sb.Append(StringAdapter.GetResource("Success") + ' ' + count.ToString() + " / " + StringAdapter.GetResource("Selected") + ' ' + items.Count.ToString());
+                if (copy.Length > 1)
+                    sb.Append(StringAdapter.GetResource("Success") + ' ' + count.ToString() + " / " + StringAdapter.GetResource("Selected") + ' ' + copy.Length.ToString());
                 else
-                    sb.Append((items[0] as ViewItem).Key);
+                    sb.Append(firstName);
                 WindowCallbacks.Print(sb.ToString());
                 ctlListView.Items.Refresh();
                 m_manager.SaveModState();
@@ -279,7 +282,7 @@ namespace L4D2ModManager
             menu.Items.Add(GenerateMenuItemWithoutConfirm("Ignore_Collision", o => { return o.IgnoreCollision(); }));
             menu.Items.Add(GenerateMenuItemWithoutConfirm("Detect_Collision", o => { return o.DetectCollision(); }));
             menu.Items.Add(new Separator());
-            menu.Items.Add(GenerateMenuItem("Delete", ()=> { return CtlExtension.ConfirmBox(StringAdapter.GetInfo("ConfirmDelete")); }, o => { return o.Delete(); }));
+            menu.Items.Add(GenerateMenuItem("Delete", ()=> { return CtlExtension.ConfirmBox(StringAdapter.GetInfo("ConfirmDelete")); }, o => { bool ret = o.Delete(); m_categorySelected.Update(m_manager); return ret; }));
 
             ctlListView.ContextMenu = menu;
 

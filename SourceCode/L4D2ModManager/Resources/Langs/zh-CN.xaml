@@ -56,7 +56,7 @@
     <s:String x:Key="Info_LoadSteamWorkshopFirstTime">第一次加载Steam创意工坊将可能会消耗较长时间</s:String>
     <s:String x:Key="Info_LoadLocalFile">加载本地文件</s:String>
     <s:String x:Key="Info_UpdateModState">更新MOD状态</s:String>
-    <s:String x:Key="Info_ConfirmDelete">将会同时删除本地文件.\r\n确认删除?</s:String>
+    <s:String x:Key="Info_ConfirmDelete" xml:space="preserve">将会同时删除本地文件.&#x0d;&#x0a;确认删除?</s:String>
     <s:String x:Key="Info_NoCollision">无冲突</s:String>
     <s:String x:Key="Info_HaveCollision">存在冲突</s:String>
     <s:String x:Key="Info_IgnoredCollision">已忽略冲突</s:String>

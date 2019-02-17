@@ -8,6 +8,14 @@ namespace L4D2ModManager
 {
     static class CtlExtension
     {
+        public static bool IsNumber(this string str)
+        {
+            foreach (var c in str)
+                if (c < '0' || c > '9')
+                    return false;
+            return true;
+        }
+
         public static void AppendAndScroll(this System.Windows.Controls.TextBox ctl, string text)
         {
             ctl.AppendText(text);
