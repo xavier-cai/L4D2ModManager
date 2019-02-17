@@ -177,7 +177,6 @@ namespace Facepunch.Steamworks
                 else
                 {
                     Items = _results.ToArray();
-                    Console.WriteLine("ITEMS:" + Items.Length.ToString());
 
                     if ( OnResult != null )
                     {

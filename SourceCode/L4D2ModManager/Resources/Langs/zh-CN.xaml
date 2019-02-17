@@ -49,6 +49,7 @@
     <s:String x:Key="Info_LoadStart">开始加载...</s:String>
     <s:String x:Key="Info_LoadComplete">加载完毕.</s:String>
     <s:String x:Key="Info_LoadFailed">加载失败.</s:String>
+    <s:String x:Key="Info_LinkToSteam">正在尝试连接至Steam</s:String>
     <s:String x:Key="Info_NeedSteam">请保证Steam在线或关闭启用Steam访问后重新加载</s:String>
     <s:String x:Key="Info_LinkToSteamFailed">无法连接到Steam社区，请检查网络连接</s:String>
     <s:String x:Key="Info_LinkToSteamUser">连接至Steam用户</s:String>
@@ -65,6 +66,8 @@
     <s:String x:Key="License">许可协议</s:String>
     <s:String x:Key="Project">项目地址</s:String>
     <s:String x:Key="Contact">联系方式</s:String>
+    <s:String x:Key="Path">路径</s:String>
+    <s:String x:Key="Create">创建</s:String>
     <s:String x:Key="Author">作者</s:String>
     <s:String x:Key="Description">描述</s:String>
     <s:String x:Key="Tag">标签</s:String>

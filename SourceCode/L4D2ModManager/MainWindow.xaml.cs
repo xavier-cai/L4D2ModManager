@@ -327,6 +327,7 @@ namespace L4D2ModManager
             if (result != Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok)
                 return false;
             Configure.InstallPath = dialog.FileName;
+            WindowCallbacks.Print(StringAdapter.GetResource("Menu_SetPath") + " : " + dialog.FileName);
             return true;
         }
 

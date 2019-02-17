@@ -28,6 +28,7 @@
     <s:String x:Key="Info_LoadStart">Start loading...</s:String>
     <s:String x:Key="Info_LoadComplete">Load success.</s:String>
     <s:String x:Key="Info_LoadFailed">Load failed.</s:String>
+    <s:String x:Key="Info_LinkToSteam">Link to Steam...</s:String>
     <s:String x:Key="Info_NeedSteam">Please reload after login Steam or disable Steam option</s:String>
     <s:String x:Key="Info_LinkToSteamFailed">Can not link to Steam community; Please check your network</s:String>
     <s:String x:Key="Info_LinkToSteamUser">Link to Steam user</s:String>
