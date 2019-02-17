@@ -4,17 +4,20 @@ A mod manager for the game _Left 4 dead 2_
 [中文版说明](#中文版说明)
 
 ## What's this
-I feel tired and difficult to manage all my subscribed workshop items, the conflicts among MODs provided by game are not relliable, what's more? they doesn't give me some options to category my MODs.
+I feel tired and difficult to manage all my subscribed workshop items, the conflicts among MODs provided by the game are not reliable, what's more? they didn't give me some options to category my MODs.
 Then I created this to help me deal with my subscribed MODs.
 
-So as you think, this guy is used to manager game MODs, find out it there some conflicts, and have a easier way to figure out conflicts.
+So as you think, this guy I made is used to manager game MODs, find out it there some conflicts, and have an easier way to figure out conflicts.
 
-The screen shot of software is just like below :
+The screenshot of the software is just like below :
 
 ![](./Introduction/english/screenshot.png)
 
+**Notice : If you are attending to manage your subscribed MODs, I recommend you use it after you launch your game and check whether there are some downloads or updates, beacause download/update of MODs will set them On automatically. Maybe I will solve this problem by adding download & updating function to this software.**
+
 ## Functions
 - Read subscribed items' information from Steam workshop (logined Steam is required)
+- Try read information from Steam workshop for local MOD files (players may move their subscribed items to custom MOD directory)
 - Read local VPK (MOD) files (not complete)
 - Classify all MODs by tags
 - Detect conflicts by tags
@@ -23,7 +26,7 @@ The screen shot of software is just like below :
 ## Incomplete functions
 - Detect conflicts by reading local VPK (MOD) files
 - Classify MODs by custom rules
-- Download MODs without launching game
+- Download/Update MODs without launching game
 
 ## How to download it
 Here is the ZIP file link : [Download](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
@@ -37,7 +40,7 @@ Here is the ZIP file link : [Download](https://github.com/XavierCai1996/L4D2ModM
 - System.Drawing
 - System.Net.Http
 - Newtonsoft.Json (you can find dll file in this project)
-- Windows API Code Pack (install : input the command `Install-Package WindowsAPICodePack-Shell` in the `Package Manager Console` )
+- Windows API Code Pack (install it : input the command `Install-Package WindowsAPICodePack-Shell` in the `Package Manager Console` )
 
 ## Used works
 Thanks for these excellent works, you guys really help me a lot!
@@ -68,8 +71,11 @@ cxw39@foxmail.com
 
 ![](./Introduction/simple-chinese/screenshot.png)
 
+**注意：如果你需要用这个软件来管理从创意工坊订阅的MOD，在使用软件之前，我建议你先登陆游戏并检查已订阅MOD的下载和更新，因为下载和更新操作会导致MOD被自动开启，也许我可以通过给这个软件加上下载/更新MOD的功能来解决这个问题**
+
 ## 功能
 - 从Steam创意工坊读取订阅物品信息(需要在已登陆的Steam)
+- 为本地MOD读取Steam创意工坊的信息(玩家有时会把订阅的物品移动到自定义MOD文件夹)
 - 从本地文件读取VPK(MOD)文件
 - 将所有MOD按标签分类
 - 按标签检测MOD冲突
@@ -78,7 +84,7 @@ cxw39@foxmail.com
 ## 未完成的功能
 - 从VPK(MOD)文件中读取信息进行冲突检测
 - 自定义MOD分类规则
-- 在软件内完成MOD的下载等操作
+- 在软件内完成MOD的下载/更新等操作
 
 ## 下载方式
 压缩包下载链接：[下载](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
