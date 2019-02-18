@@ -14,7 +14,7 @@ namespace L4D2ModManager
 
         public string FileName { get; private set; }
         public long FileSize { get; private set; }
-        public ulong PublishedId { get; set; }
+        public ulong PublishedId { get; private set; }
         public ModCategory[] Category { get { return m_category.Keys.ToArray(); } }
         public object[] SubCategory(ModCategory c) { return m_category[c].Keys.ToArray(); }
         public Image Image { get; private set; }
@@ -49,9 +49,33 @@ namespace L4D2ModManager
             ImageURL = "";
         }
 
+        public L4D2Mod(string json, string description)
+        {
+            DoInitialize();
+            LoadJson(json, description);
+        }
+
+        public void LoadJson(string json, string description)
+        {
+            Newtonsoft.Json.Linq.JObject j = Newtonsoft.Json.Linq.JObject.Parse(json);
+            foreach (var v in j)
+            {
+                var prop = this.GetType().GetProperty(v.Key);
+                prop.SetValue(this, v.Value.ToObject(prop.PropertyType));
+                if (v.Key == "Tags")
+                    Tags = Tags[0].ToLower().Split(',');
+                else if(v.Key == "PublishedId")
+                    FileName = PublishedId.ToString() + ".vpk";
+            }
+            Description = description;
+            HandleTags();
+        }
+
         public bool LoadItem(Facepunch.Steamworks.Workshop.Item item)
         {
             Logging.Assert(item.Id != 0);
+            if(item.Id <= 0)
+                return false;
             FileName = item.Id.ToString() + ".vpk";
             FileSize = (long)item.FileSize;
             PublishedId = item.Id;
@@ -201,7 +225,7 @@ namespace L4D2ModManager
                         {
                             if (Regex.Match(directory.Path, regex.Key).Length == directory.Path.Length)
                             {
-                                Logging.Log("load " + vpk.ArchivePath.Split('/').Last().Split('\\').Last() + " , directory : " + directory.Path + " matches " + regex.Key.ToString());
+                                //Logging.Log("load " + vpk.ArchivePath.Split('/').Last().Split('\\').Last() + " , directory : " + directory.Path + " matches " + regex.Key.ToString());
                                 regex.Value.Invoke(this, directory);
                                 break;
                             }

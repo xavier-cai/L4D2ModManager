@@ -156,6 +156,57 @@ namespace L4D2ModManager
             return m_steam != null;
         }
 
+        class DelegateSteamResult
+        {
+            public bool Result { get; set; }
+            public string[] Mods { get; set; }
+        }
+
+        private void GetDelegateSteamResult(List<ulong> ids, ModSource source, bool create, int start = 0)
+        {
+            bool delegateSuccess = false;
+            int delegateCount = 5;
+            while (!delegateSuccess && delegateCount-- > 0)
+            {
+                using (var steamDelegate = new SteamDelegate(ids))
+                {
+                    steamDelegate.RunDelegate();
+                    if (!steamDelegate.Timeout)
+                    {
+                        delegateSuccess = true;
+                        if(!steamDelegate.Result)
+                            WindowCallbacks.Print(StringAdapter.GetInfo("LinkToSteamFailed"));
+                        else
+                        {
+                            int count = 0;
+                            while(true)
+                            {
+                                count++;
+                                var delegateResult = steamDelegate.Read();
+                                if (delegateResult == null)
+                                    break;
+                                if (delegateResult.FileId > 0)
+                                {
+                                    //if(source == ModSource.Workshop)
+                                    WindowCallbacks.Process(start + count, start + ids.Count, StringAdapter.GetInfo("LoadSteamWorkshop") + " : " + delegateResult.FileId.ToString());
+                                    string key = (source == ModSource.Workshop ? @"workshop\" : "") + delegateResult.FileId.ToString() + ".vpk";
+                                    if (!m_modStates.ContainsKey(key))
+                                    {
+                                        if (create)
+                                            m_modStates.Add(key, new ModInfo(this, key, ModState.On, source, new L4D2Mod(delegateResult.Json, delegateResult.Description)));
+                                    }
+                                    else
+                                    {
+                                        m_modStates[key].Mod.LoadJson(delegateResult.Json, delegateResult.Description);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private void LoadSteamWorkshop()
         {
             if(m_steam != null)
@@ -167,34 +218,41 @@ namespace L4D2ModManager
                 var list = m_steam.Workshop.GetSubscribedItemIds();
                 if(list.Length > 0)
                 {
-                    var query = m_steam.Workshop.CreateQuery();
-                    query.FileId = list.ToList();
-                    query.Run();
-                    query.Block();
-                    Logging.Assert(!query.IsRunning);
-                    //Logging.Assert(query.TotalResults > 0);
-                    //Logging.Assert(query.Items.Length > 0);
-                    int total = query.Items.Length;
-                    int count = 0;
-                    foreach (var item in query.Items)
+                    if (Configure.DelegateSteam)
                     {
-                        ulong id = item.Id;
-                        //Facepunch.Steamworks.Workshop.Item item = m_steam.Workshop.GetItem(v);
-                        if (id > 0)
+                        GetDelegateSteamResult(list.ToList(), ModSource.Workshop, true);
+                    }
+                    else
+                    {
+                        var query = m_steam.Workshop.CreateQuery();
+                        query.FileId = list.ToList();
+                        query.Run();
+                        query.Block();
+                        Logging.Assert(!query.IsRunning);
+                        //Logging.Assert(query.TotalResults > 0);
+                        //Logging.Assert(query.Items.Length > 0);
+                        int total = query.Items.Length;
+                        int count = 0;
+                        foreach (var item in query.Items)
                         {
-                            WindowCallbacks.Process(count++, total, StringAdapter.GetInfo("LoadSteamWorkshop") + " : " + id.ToString());
-                            string key = @"workshop\" + id.ToString() + ".vpk";
-                            if (!m_modStates.ContainsKey(key))
+                            ulong id = item.Id;
+                            //Facepunch.Steamworks.Workshop.Item item = m_steam.Workshop.GetItem(v);
+                            if (id > 0)
                             {
-                                L4D2Mod mod = new L4D2Mod(item);
-                                if (mod.Title != null && mod.Title.Length > 0)
-                                    m_modStates.Add(key, new ModInfo(this, key, ModState.On, ModSource.Workshop, mod));
+                                WindowCallbacks.Process(count++, total, StringAdapter.GetInfo("LoadSteamWorkshop") + " : " + id.ToString());
+                                string key = @"workshop\" + id.ToString() + ".vpk";
+                                if (!m_modStates.ContainsKey(key))
+                                {
+                                    L4D2Mod mod = new L4D2Mod(item);
+                                    if (mod.Title != null && mod.Title.Length > 0)
+                                        m_modStates.Add(key, new ModInfo(this, key, ModState.On, ModSource.Workshop, mod));
+                                }
+                                else
+                                {
+                                    m_modStates[key].Mod.LoadItem(item);
+                                }
+                                Logging.Log("load from Steam workshop " + id.ToString());
                             }
-                            else
-                            {
-                                m_modStates[key].Mod.LoadItem(item);
-                            }
-                            Logging.Log("load from Steam workshop " + id.ToString());
                         }
                     }
                 }
@@ -252,21 +310,25 @@ namespace L4D2ModManager
                 }
                 if (m_steam != null && fileIds.Count > 0)
                 {
-                    var query = m_steam.Workshop.CreateQuery();
-                    query.FileId = fileIds;
-                    query.Run();
-                    query.Block();
-                    Logging.Assert(!query.IsRunning);
-                    int nResult = query.Items.Length;
-                    foreach (var item in query.Items)
+                    if (Configure.DelegateSteam)
                     {
-                        ulong id = item.Id;
-                        //Facepunch.Steamworks.Workshop.Item item = m_steam.Workshop.GetItem(v);
-                        if (id > 0)
+                        GetDelegateSteamResult(fileIds, ModSource.Player, false, fileIds.Count);
+                    }
+                    else
+                    {
+                        var query = m_steam.Workshop.CreateQuery();
+                        query.FileId = fileIds;
+                        query.Run();
+                        query.Block();
+                        Logging.Assert(!query.IsRunning);
+                        foreach (var item in query.Items)
                         {
-                            string key = id.ToString() + ".vpk";
-                            Logging.Assert(m_modStates.ContainsKey(key));
-                            m_modStates[key].Mod.LoadItem(item);
+                            if (item.Id > 0)
+                            {
+                                string key = item.Id.ToString() + ".vpk";
+                                Logging.Assert(m_modStates.ContainsKey(key));
+                                m_modStates[key].Mod.LoadItem(item);
+                            }
                         }
                     }
                 }
@@ -368,18 +430,9 @@ namespace L4D2ModManager
             DoInitialize(m_path);
         }
 
-        private void DoInitialize(string path)
-        { 
-            if (Configure.EnableSteam && m_steam != null)
-                LoadSteamWorkshop();
-            LoadLocalFiles(path);
-            foreach (var mod in m_modStates.Values)
-                mod.RefreshResources();
-
-            //read the addons list file
-            WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
-            WindowCallbacks.Print(StringAdapter.GetInfo("UpdateModState"));
-            WindowCallbacks.Process(1, 1, StringAdapter.GetInfo("UpdateModState"));
+        private bool IsReadAddonList { get; set; } = false;
+        private void ReadAddonList(string path)
+        {
             L4D2TxtReader reader = new L4D2TxtReader(new FileStream(path + m_fileList, FileMode.Open), L4D2TxtReader.TxtType.AddonList);
             ModInfo nullModeInfo = new ModInfo(this, null, ModState.Miss, ModSource.Player, null);
             nullModeInfo.ModState = ModState.Miss;
@@ -393,6 +446,22 @@ namespace L4D2ModManager
                 //else
                 //    m_modStates.Add(v.Key, nullModeInfo);
             }
+            IsReadAddonList = true;
+        }
+
+        private void DoInitialize(string path)
+        { 
+            if (Configure.EnableSteam && m_steam != null)
+                LoadSteamWorkshop();
+            LoadLocalFiles(path);
+            foreach (var mod in m_modStates.Values)
+                mod.RefreshResources();
+
+            //read the addons list file
+            WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
+            WindowCallbacks.Print(StringAdapter.GetInfo("UpdateModState"));
+            WindowCallbacks.Process(1, 1, StringAdapter.GetInfo("UpdateModState"));
+            ReadAddonList(path);
             WindowCallbacks.Process(1, 1, StringAdapter.GetInfo("LoadComplete"));
             WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
 
@@ -488,6 +557,16 @@ namespace L4D2ModManager
 
         public bool SaveModState()
         {
+            if (!IsReadAddonList)
+            {
+                Logging.Log("Try read addon list");
+                ReadAddonList(m_path);
+                if (!IsReadAddonList)
+                {
+                    Logging.Log("Some problem here: can not read the list");
+                    return false;
+                }
+            }
             try
             {
                 StringBuilder sb = new StringBuilder();

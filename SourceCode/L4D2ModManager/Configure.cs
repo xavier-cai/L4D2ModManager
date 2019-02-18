@@ -34,6 +34,12 @@ namespace L4D2ModManager
             set { ContentInstance.Language = value; }
         }
 
+        static public bool DelegateSteam
+        {
+            get { return ContentInstance.DelegateSteam; }
+            set { ContentInstance.DelegateSteam = value; }
+        }
+
         class Content
         {
             public string InstallPath { get; set; }
@@ -41,6 +47,7 @@ namespace L4D2ModManager
             public bool EnableReadVpk { get; set; }
             public bool EnableAddons { get; set; }
             public string Language { get; set; }
+            public bool DelegateSteam { get; set; }
             public Content()
             {
                 InstallPath = "";
@@ -48,6 +55,7 @@ namespace L4D2ModManager
                 EnableReadVpk = false;
                 EnableAddons = true;
                 Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                DelegateSteam = true;
             }
         }
         
