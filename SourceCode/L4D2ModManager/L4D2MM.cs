@@ -505,7 +505,10 @@ namespace L4D2ModManager
                         {
                             foreach (var v in new DirectoryInfo(m_path + (mod.Source == ModSource.Player ? m_dirAddons : m_dirWorkshop))
                                .GetFiles(mod.Mod.FileName.Substring(0, mod.Mod.FileName.LastIndexOf('.')) + ".*"))
+                            {
+                                v.Attributes = FileAttributes.Normal;
                                 v.Delete();
+                            }
                             return;
                         }
                         catch
