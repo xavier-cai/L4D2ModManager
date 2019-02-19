@@ -179,6 +179,7 @@
     <Compile Include="Fork\SharpVPK\VpkDirectory.cs" />
     <Compile Include="Fork\SharpVPK\VpkEntry.cs" />
     <Compile Include="Fork\SharpVPK\VpkReaderBase.cs" />
+    <Compile Include="SteamDelegate.cs" />
     <Compile Include="SteamAppId.cs" />
     <Compile Include="StringAdapter.cs" />
     <Compile Include="Fork\UniversalCharacterDetection\ByteBuffer.cs" />

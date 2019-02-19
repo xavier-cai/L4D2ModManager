@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:L4D2ModManager"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="L4D2ModManager.MainWindow"
         mc:Ignorable="d"
-        Title="L4D2MM" Height="594" Width="860" ResizeMode="CanMinimize" Loaded="WindowLoaded" WindowStartupLocation="CenterScreen" Closed="WindowClosed" Icon="Resources/Icon/icon128.ico" BorderThickness="0">
+        Title="L4D2MM" Height="580" Width="860" ResizeMode="CanResize" Loaded="WindowLoaded" WindowStartupLocation="CenterScreen" Closed="WindowClosed" Icon="Resources/Icon/icon128.ico" BorderThickness="0" SizeChanged="WindowSizeChanged" MinWidth="800" MinHeight="500">
     <Window.Resources>
         <local:ListviewRowColorConverter x:Key="ListviewRowColorConverter"/>
         <local:ListviewCellColorConverter x:Key="ListviewCellColorConverter"/>
@@ -25,8 +25,8 @@
         <DropShadowEffect Opacity="0.3" BlurRadius="15" ShadowDepth="1"/>
     </Window.Effect>
     <Grid>
-        <StackPanel HorizontalAlignment="Left" Height="580" Width="860" Margin="0,0,0,0" VerticalAlignment="Top">
-            <Menu>
+        <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
+            <Menu Name="ctlMenu">
                 <MenuItem Header="{DynamicResource Menu_File}">
                     <MenuItem Header="{DynamicResource Menu_SetPath}" Click="MenuItemSetPathClick"/>
                     <MenuItem Header="{DynamicResource Menu_Reload}" Click="MenuItemReloadManagerClick" />
@@ -75,9 +75,9 @@
                     <Label Content="{DynamicResource Label_SubCategory}" Margin="30,0,0,0" VerticalContentAlignment="Center" />
                     <ComboBox x:Name="ctlSubcategoryList" Width="140" Height="20" Margin="10,0,0,0"/>
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Height="400" Margin="0,5,0,0" VerticalAlignment="Top" Width="840" Orientation="Horizontal">
-                    <StackPanel HorizontalAlignment="Left" Height="400" Margin="0,0,0,0" VerticalAlignment="Top" Width="540">
-                        <ListView x:Name="ctlListView" Height="400" HorizontalContentAlignment="Center" ItemContainerStyle="{StaticResource ListViewItemStyle}" SelectionChanged="ListViewSelectionChanged" Foreground="Black" MouseRightButtonUp="ListViewMouseRightButtonUp">
+                <StackPanel HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
+                        <ListView x:Name="ctlListView" Height="400" Width="540" HorizontalContentAlignment="Center" ItemContainerStyle="{StaticResource ListViewItemStyle}" SelectionChanged="ListViewSelectionChanged" Foreground="Black" MouseRightButtonUp="ListViewMouseRightButtonUp">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="230" Header="{DynamicResource Col_ModId}">
@@ -121,10 +121,10 @@
                             </ListView.View>
                         </ListView>
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Left" Height="400" Margin="4,0,0,0" VerticalAlignment="Top" Width="296">
+                    <StackPanel HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Top">
                         <!-- 640 x 360 -->
-                        <Border Width="296" Height="146" BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,4">
-                            <Image x:Name="ctlImage" Height="146">
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,4">
+                            <Image x:Name="ctlImage" Width="296" Height="146">
                                 <Image.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,1" EndPoint="1,1">
                                         <!--GradientStop Color="White" Offset="{Binding ElementName=ctlImage, Converter={StaticResource OffsetConverter}, ConverterParameter=1}"/-->
@@ -139,10 +139,10 @@
                         <RichTextBox x:Name="ctlFrameText" Height="250" IsReadOnly="True"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Height="110" Margin="0,4,0,-16" VerticalAlignment="Bottom" Width="840">
-                    <TextBox x:Name="ctlPrintText" Height="62" TextWrapping="Wrap" VerticalAlignment="Top" Width="840" HorizontalAlignment="Left" BorderThickness="1" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,1" />
+                <StackPanel HorizontalAlignment="Left" Margin="0,4,0,-16" VerticalAlignment="Bottom">
+                    <TextBox x:Name="ctlPrintText" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="840" HorizontalAlignment="Left" BorderThickness="1" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,1" />
                     <ProgressBar x:Name="ctlProgressBar" Height="16" VerticalAlignment="Top" Width="840"/>
-                    <TextBox x:Name="ctlProgressText" Margin="0,-1,0,0" Height="18" TextWrapping="Wrap" VerticalAlignment="Top" Width="840" HorizontalAlignment="Left" BorderThickness="0" IsEnabled="False" />
+                    <TextBox x:Name="ctlProgressText" Margin="0,-1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="840" HorizontalAlignment="Left" BorderThickness="0" IsEnabled="False" Text=" " />
                 </StackPanel>
             </StackPanel>
         </StackPanel>

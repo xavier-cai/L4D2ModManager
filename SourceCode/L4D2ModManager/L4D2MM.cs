@@ -433,20 +433,23 @@ namespace L4D2ModManager
         private bool IsReadAddonList { get; set; } = false;
         private void ReadAddonList(string path)
         {
-            L4D2TxtReader reader = new L4D2TxtReader(new FileStream(path + m_fileList, FileMode.Open), L4D2TxtReader.TxtType.AddonList);
-            ModInfo nullModeInfo = new ModInfo(this, null, ModState.Miss, ModSource.Player, null);
-            nullModeInfo.ModState = ModState.Miss;
-            //update state of mods
-            foreach (var v in reader.Values)
+            if (path != null && path != "")
             {
-                if (m_modStates.ContainsKey(v.Key))
-                    if (v.Value == "0")
-                        //m_modStates[v.Key].ModState = (v.Value == "1" ? ModState.On : ModState.Off);
-                        m_modStates[v.Key].SetOff();
-                //else
-                //    m_modStates.Add(v.Key, nullModeInfo);
+                L4D2TxtReader reader = new L4D2TxtReader(new FileStream(path + m_fileList, FileMode.Open), L4D2TxtReader.TxtType.AddonList);
+                ModInfo nullModeInfo = new ModInfo(this, null, ModState.Miss, ModSource.Player, null);
+                nullModeInfo.ModState = ModState.Miss;
+                //update state of mods
+                foreach (var v in reader.Values)
+                {
+                    if (m_modStates.ContainsKey(v.Key))
+                        if (v.Value == "0")
+                            //m_modStates[v.Key].ModState = (v.Value == "1" ? ModState.On : ModState.Off);
+                            m_modStates[v.Key].SetOff();
+                    //else
+                    //    m_modStates.Add(v.Key, nullModeInfo);
+                }
+                IsReadAddonList = true;
             }
-            IsReadAddonList = true;
         }
 
         private void DoInitialize(string path)

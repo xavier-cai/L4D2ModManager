@@ -30,6 +30,18 @@ namespace L4D2ModManager
                 ctl.Source = null;
         }
 
+        public static void SetSize(this System.Windows.FrameworkElement ctl, Size size)
+        {
+            ctl.Width = size.Width;
+            ctl.Height = size.Height;
+        }
+
+        public static void SetSize(this System.Windows.FrameworkElement ctl, double width, double height)
+        {
+            ctl.Width = width;
+            ctl.Height = height;
+        }
+
         public static bool ConfirmBox(string text, string header = "")
         {
             System.Windows.MessageBoxResult ret = System.Windows.MessageBox.Show(text, header, System.Windows.MessageBoxButton.OKCancel, System.Windows.MessageBoxImage.Question);

@@ -88,9 +88,15 @@ namespace L4D2ModManager
             , System.Windows.Threading.DispatcherPriority.Background);
         }
 
+        class DelegateResult
+        {
+            public string Result { get; set; }
+            public string[] Mods { get; set; }
+        }
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             Logging.Log("window load success");
+            //this.Height += ctlProgressText.ActualHeight;
 
             //set up
             WindowCallbacks.SetProcessCallback(ProcessBarOperation);
@@ -119,21 +125,21 @@ namespace L4D2ModManager
         {
             new Thread(new ThreadStart(() =>
             {
-                if (!m_manager.LoadConfig())
-                {
-                    WindowCallbacks.Print(StringAdapter.GetInfo("CheckPath"));
-                    return;
-                }
-                if (!m_manager.SetEnableSteam(Configure.EnableSteam))
-                {
-                    WindowCallbacks.Print(StringAdapter.GetInfo("NeedSteam"));
-                    return;
-                }
-                WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
-                m_manager.Initialize();
-                Logging.Log("mod manager initialize success");
-                m_categorySelected.Update(m_manager);
-                WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
+            if (!m_manager.LoadConfig())
+            {
+                WindowCallbacks.Print(StringAdapter.GetInfo("CheckPath"));
+                return;
+            }
+            if (!m_manager.SetEnableSteam(Configure.EnableSteam))
+            {
+                WindowCallbacks.Print(StringAdapter.GetInfo("NeedSteam"));
+                return;
+            }
+            WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
+            m_manager.Initialize();
+            Logging.Log("mod manager initialize success");
+            m_categorySelected.Update(m_manager);
+            WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
             })).Start();
         }
 
@@ -394,6 +400,29 @@ namespace L4D2ModManager
                 + "\r\n" + StringAdapter.GetResource("Project") + " : https://github.com/XavierCai1996/L4D2ModManager"
                 + "\r\n" + StringAdapter.GetResource("Contact") + " : cxw39@foxmail.com"
                 , StringAdapter.GetResource("About"));
+        }
+
+        private void AdaptWindowSize(Size size)
+        {
+            double totalHeight = size.Height;
+            double totalWidth = size.Width - 20;
+            double printBoxHeightFactor = 0.12;
+            double contentDivideFactor = 0.354;
+            double imageFactor = 36.0 / 64.0;
+            double contentHeight = totalHeight - ctlMenu.ActualHeight - 30 - printBoxHeightFactor * totalHeight - ctlProgressBar.ActualHeight - ctlProgressText.ActualHeight - 53;
+            double imageWidth = Math.Min(500, (totalWidth - 4) * contentDivideFactor);
+            double imageHeight = imageFactor * imageWidth;
+            ctlListView.SetSize(totalWidth - 4 - imageWidth, contentHeight);
+            ctlImage.SetSize(imageWidth, imageHeight);
+            ctlFrameText.SetSize(imageWidth, contentHeight - imageHeight - 4 - 2);
+            ctlPrintText.SetSize(totalWidth, printBoxHeightFactor * totalHeight);
+            ctlProgressBar.SetSize(totalWidth, ctlProgressBar.ActualHeight);
+            ctlProgressText.SetSize(totalWidth, ctlProgressText.ActualHeight);
+        }
+
+        private void WindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            AdaptWindowSize(e.NewSize);
         }
     }
 }
