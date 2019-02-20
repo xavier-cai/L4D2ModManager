@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace L4D2ModManager
 {
-    class L4D2Mod
+    class L4D2Mod : IDisposable
     {
         static string[] ImageExtensions = new string[] { "jpg", "png", "bmp" };
 
@@ -47,6 +47,12 @@ namespace L4D2ModManager
             Author = "";
             Description = "";
             ImageURL = "";
+        }
+
+        public void Dispose()
+        {
+            ImageMemoryStream?.Dispose();
+            Image?.Dispose();
         }
 
         public L4D2Mod(string json, string description)
@@ -107,11 +113,14 @@ namespace L4D2ModManager
             return true;
         }
 
-        public void LoadPreviewImageFromURL(string path)
+        public void LoadPreviewImageFromURL(string path, bool enableCache = true)
         {
             string filename = path + FileName.Replace(".vpk", ".jpg");
-            var web = new System.Net.WebClient();
-            web.DownloadFile(ImageURL, filename);
+            if(!enableCache || !System.IO.File.Exists(filename))
+            {
+                var web = new System.Net.WebClient();
+                web.DownloadFile(ImageURL, filename);
+            }
             Image = System.Drawing.Image.FromFile(filename);
             var bitmap = new System.Drawing.Bitmap(Image);
             ImageMemoryStream = new MemoryStream();

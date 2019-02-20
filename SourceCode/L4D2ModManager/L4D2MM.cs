@@ -34,7 +34,7 @@ namespace L4D2ModManager
             Off
         };
 
-        public class ModInfo : L4D2Resource.ResourceHandler
+        public class ModInfo : L4D2Resource.ResourceHandler, IDisposable
         {
             public ModInfo(L4D2MM manager, string key, ModState state, ModSource source, L4D2Mod mod)
             {
@@ -94,6 +94,12 @@ namespace L4D2ModManager
 
                 if (CanSetOff && !IsIgnoreCollision)
                     base.Regist();
+            }
+
+            public void Dispose()
+            {
+                base.Unregist();
+                Mod?.Dispose();
             }
         };
 
@@ -364,6 +370,8 @@ namespace L4D2ModManager
 
         public void Clear()
         {
+            foreach (var v in m_modStates)
+                v.Value.Dispose();
             m_modStates.Clear();
         }
 
@@ -379,7 +387,7 @@ namespace L4D2ModManager
                     return false;
                 Configure.InstallPath = path;
                 m_path = path;
-                m_modStates.Clear();
+                Clear();
                 return true;
             }
             return false; //need user call the set function
