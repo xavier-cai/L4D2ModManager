@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows.Media;
 
 namespace L4D2ModManager
 {
     class Configure
     {
+        static public bool ReleaseLogToFile
+        {
+            get { return ContentInstance.ReleaseLogToFile; }
+            set { ContentInstance.ReleaseLogToFile = value; }
+        }
         static public string InstallPath
         {
             get { return ContentInstance.InstallPath; }
@@ -40,16 +41,38 @@ namespace L4D2ModManager
             set { ContentInstance.DelegateSteam = value; }
         }
 
+        static public ViewContent View
+        {
+            get { return ContentInstance.View; }
+        }
+
+        public class ViewContent
+        {
+            public double FontSize = 12.0;
+            public Color IndicatorNormal = Colors.LightGreen;
+            public Color IndicatorCollision = Colors.Red;
+            public Color IndicatorIgnore = Colors.Yellow;
+            public Color StateUnregisted = Colors.ForestGreen;
+            public Color StateUnsubscribed = Colors.Black;
+            public Color StateMiss = Colors.OrangeRed;
+            public Color StateOff = Colors.OrangeRed;
+            public Color StateOn = Colors.MediumSpringGreen;
+        }
+
         class Content
         {
+            public bool ReleaseLogToFile { get; set; }
             public string InstallPath { get; set; }
             public bool EnableSteam { get; set; }
             public bool EnableReadVpk { get; set; }
             public bool EnableAddons { get; set; }
             public string Language { get; set; }
             public bool DelegateSteam { get; set; }
+            public ViewContent View { get; } = new ViewContent();
+
             public Content()
             {
+                ReleaseLogToFile = true;
                 InstallPath = "";
                 EnableSteam = true;
                 EnableReadVpk = false;

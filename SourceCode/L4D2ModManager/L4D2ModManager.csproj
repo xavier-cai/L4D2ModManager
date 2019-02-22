@@ -53,6 +53,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -71,9 +72,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BindingConverter\ListviewTooltipConverter.cs" />
     <Compile Include="BindingConverter\ListviewCollisionColorConverter.cs" />
-    <Compile Include="BindingConverter\ListviewRowColorConverter.cs" />
+    <Compile Include="BindingConverter\ListviewTooltipConverter.cs" />
     <Compile Include="CategorySelecter.cs" />
     <Compile Include="Configure.cs" />
     <Compile Include="CSSTL\Set.cs" />
@@ -244,6 +244,12 @@
     <Compile Include="ViewItem.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="WindowCallbacks.cs" />
+    <Compile Include="WindowColors.xaml.cs">
+      <DependentUpon>WindowColors.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowSetValue.xaml.cs">
+      <DependentUpon>WindowSetValue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinformAdapter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -264,6 +270,14 @@
     <Page Include="Resources\Langs\zh-CN.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowColors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowSetValue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

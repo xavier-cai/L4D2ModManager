@@ -8,7 +8,6 @@
         mc:Ignorable="d"
         Title="L4D2MM" Height="580" Width="860" ResizeMode="CanResize" Loaded="WindowLoaded" WindowStartupLocation="CenterScreen" Closed="WindowClosed" Icon="Resources/Icon/icon128.ico" BorderThickness="0" SizeChanged="WindowSizeChanged" MinWidth="800" MinHeight="500">
     <Window.Resources>
-        <local:ListviewRowColorConverter x:Key="ListviewRowColorConverter"/>
         <local:ListviewCellColorConverter x:Key="ListviewCellColorConverter"/>
         <local:ListviewCollisionColorConverter x:Key="ListviewCollisionColorConverter"/>
         <local:ListviewTooltipConverter x:Key="ListviewTooltipConverter"/>
@@ -32,6 +31,16 @@
                     <MenuItem Header="{DynamicResource Menu_Reload}" Click="MenuItemReloadManagerClick" />
                     <Separator />
                     <MenuItem Header="{DynamicResource Menu_Exit}" Click="MenuItemExitClick" />
+                </MenuItem>
+                <MenuItem Header="{DynamicResource Menu_Edit}">
+                    <MenuItem Header="{DynamicResource Menu_CustomCategory}" Click="MenuItemCustomCategoryClick" IsEnabled="False"/>
+                    <MenuItem Header="{DynamicResource Menu_LocalModClassifyRule}" Click="MenuItemLocalModClassifyRuleClick" IsEnabled="False"/>
+                </MenuItem>
+                <MenuItem Header="{DynamicResource Menu_View}">
+                    <MenuItem Header="{DynamicResource Menu_FontSize}" Click="MenuItemFontSizeClick"/>
+                    <MenuItem Header="{DynamicResource Menu_Colors}" Click="MenuItemColorsClick"/>
+                    <Separator />
+                    <MenuItem Header="{DynamicResource Menu_CollisionContentView}" Click="MenuItemCollisionContentViewClick" IsEnabled="False"/>
                 </MenuItem>
                 <MenuItem Header="{DynamicResource Menu_Option}">
                     <MenuItem Name="ctlMenuModsource" Header="{DynamicResource Menu_ModSource}">
@@ -69,8 +78,8 @@
                 </MenuItem>
             </Menu>
             <StackPanel Margin="2,0,0,0">
-                <StackPanel HorizontalAlignment="Left" Height="30" Margin="0,5,0,0" VerticalAlignment="Center" Width="840" Orientation="Horizontal">
-                    <Label Content="{DynamicResource Label_MainCategory}" Margin="0,0,0,0" VerticalContentAlignment="Center" />
+                <StackPanel Name="ctlCategoryPanel" HorizontalAlignment="Left" Margin="0,10,0,5" VerticalAlignment="Center" Width="840" Orientation="Horizontal">
+                    <Label Name="ctlLabel" Content="{DynamicResource Label_MainCategory}" Margin="0,0,0,0" VerticalContentAlignment="Center" />
                     <ComboBox x:Name="ctlCategoryList" Width="140" Height="20" Margin="10,0,0,0"/>
                     <Label Content="{DynamicResource Label_SubCategory}" Margin="30,0,0,0" VerticalContentAlignment="Center" />
                     <ComboBox x:Name="ctlSubcategoryList" Width="140" Height="20" Margin="10,0,0,0"/>
@@ -125,15 +134,14 @@
                         <!-- 640 x 360 -->
                         <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,4">
                             <Image x:Name="ctlImage" Width="296" Height="146">
-                                <Image.OpacityMask>
+                                <!--Image.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,1" EndPoint="1,1">
-                                        <!--GradientStop Color="White" Offset="{Binding ElementName=ctlImage, Converter={StaticResource OffsetConverter}, ConverterParameter=1}"/-->
                                         <GradientStop Color="Transparent" Offset="0"/>
                                         <GradientStop Color="White" Offset="0.2"/>
                                         <GradientStop Color="White" Offset="0.8"/>
                                         <GradientStop Color="Transparent" Offset="1"/>
                                     </LinearGradientBrush>
-                                </Image.OpacityMask>
+                                </-->
                             </Image>
                         </Border>
                         <RichTextBox x:Name="ctlFrameText" Height="250" IsReadOnly="True"/>

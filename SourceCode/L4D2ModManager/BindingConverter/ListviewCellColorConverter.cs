@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -13,22 +10,22 @@ namespace L4D2ModManager
     {
         class ColorMatcher
         {
-            private Dictionary<L4D2MM.ModState, Color> m_matches;
+            private Dictionary<L4D2MM.ModState, Func<Color>> m_matches;
 
             public ColorMatcher()
             {
-                m_matches = new Dictionary<L4D2MM.ModState, Color>();
-                m_matches.Add(L4D2MM.ModState.Unregisted, Colors.ForestGreen);
-                m_matches.Add(L4D2MM.ModState.Unsubscribed, Colors.Black);
-                m_matches.Add(L4D2MM.ModState.Miss, Colors.OrangeRed);
-                m_matches.Add(L4D2MM.ModState.Off, Colors.OrangeRed);
-                m_matches.Add(L4D2MM.ModState.On, Colors.MediumSpringGreen);
+                m_matches = new Dictionary<L4D2MM.ModState, Func<Color>>();
+                m_matches.Add(L4D2MM.ModState.Unregisted, () => Configure.View.StateUnregisted);
+                m_matches.Add(L4D2MM.ModState.Unsubscribed, () => Configure.View.StateUnsubscribed);
+                m_matches.Add(L4D2MM.ModState.Miss, () => Configure.View.StateMiss);
+                m_matches.Add(L4D2MM.ModState.Off, () => Configure.View.StateOff);
+                m_matches.Add(L4D2MM.ModState.On, () => Configure.View.StateOff);
             }
 
             public Color Match(L4D2MM.ModState key)
             {
                 if (m_matches.ContainsKey(key))
-                    return m_matches[key];
+                    return m_matches[key]();
                 throw new ArgumentException();
             }
         }

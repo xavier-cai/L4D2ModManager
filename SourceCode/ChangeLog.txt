@@ -1,0 +1,5 @@
+version 1.0.1
+-read cache image file
+-do dispose to release image resource
+-enhanced UI
+-log to file in release version

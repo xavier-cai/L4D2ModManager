@@ -9,11 +9,18 @@
     <s:String x:Key="Col_ModState">State</s:String>
     <s:String x:Key="Col_ModSize">Size</s:String>
     <s:String x:Key="Menu_File">File(F)</s:String>
+    <s:String x:Key="Menu_Edit">Edit(E)</s:String>
+    <s:String x:Key="Menu_View">View(V)</s:String>
     <s:String x:Key="Menu_Option">Options(O)</s:String>
     <s:String x:Key="Menu_About">About(A)</s:String>
     <s:String x:Key="Menu_Reload">Reload manager</s:String>
     <s:String x:Key="Menu_SetPath">Set game path</s:String>
     <s:String x:Key="Menu_Exit">Exit</s:String>
+    <s:String x:Key="Menu_CustomCategory">Custom category</s:String>
+    <s:String x:Key="Menu_LocalModClassifyRule">Local MOD classify rules</s:String>
+    <s:String x:Key="Menu_FontSize">Font size</s:String>
+    <s:String x:Key="Menu_Colors">Colors</s:String>
+    <s:String x:Key="Menu_CollisionContentView">Collision content view</s:String>
     <s:String x:Key="Menu_Analytics">Analytics</s:String>
     <s:String x:Key="Menu_ModSource">Mod source</s:String>
     <s:String x:Key="Menu_SteamWorkshop">Steam workshop</s:String>
@@ -21,6 +28,7 @@
     <s:String x:Key="Menu_SourceWorkshop">Steam workshop</s:String>
     <s:String x:Key="Menu_SourceAddons">Add by player</s:String>
     <s:String x:Key="Menu_Language">Language</s:String>
+    <s:String x:Key="Text_OK">OK</s:String>
     <s:String x:Key="Info_About">This is a free open-source software created by Xavier Cai</s:String>
     <s:String x:Key="Info_ChangeLanguage">Language setting changes will take effect when you restart the software</s:String>
     <s:String x:Key="Info_FindPath">Find path</s:String>

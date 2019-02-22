@@ -142,6 +142,7 @@ namespace L4D2ModManager
 
         public bool SetEnableSteam(bool enable)
         {
+            Logging.Log("enable Steam " + enable.ToString());
             if (m_steam != null && !enable)
                 m_steam = null;
             else if (m_steam == null && enable)
@@ -489,6 +490,7 @@ namespace L4D2ModManager
                         try
                         {
                             mod.LoadPreviewImageFromURL(m_path + (v.Value.Source == ModSource.Workshop ? m_dirWorkshop : m_dirAddons));
+                            WindowCallbacks.NotifyRefresh(v.Key, v.Value);
                         }
                         catch { }
                     }
@@ -509,6 +511,7 @@ namespace L4D2ModManager
                 //the image file can not be realsed right now
                 new System.Threading.Thread(new System.Threading.ThreadStart(() =>
                 {
+                    Logging.Log("delete mod " + mod.Key);
                     int trycount = 0;
                     while (trycount++ < 10 ) //try 10 times
                     {
@@ -557,6 +560,7 @@ namespace L4D2ModManager
             ModState oldState = mod.ModState;
             if (oldState != state)
             {
+                Logging.Log("change mod " + key + " from " + oldState.ToString() + " to " + oldState.ToString());
                 if(oldState == ModState.Unsubscribed)
                     m_steam.Workshop.GetItem(mod.Mod.PublishedId).Subscribe();
                 if (state == ModState.Unsubscribed)

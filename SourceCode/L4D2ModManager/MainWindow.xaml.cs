@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace L4D2ModManager
 {
@@ -30,6 +24,7 @@ namespace L4D2ModManager
         public MainWindow()
         {
             InitializeComponent();
+            this.FontSize = Configure.View.FontSize;
 
             //new
             m_manager = new L4D2MM();
@@ -50,6 +45,7 @@ namespace L4D2ModManager
 
         private void PrintOperation(string info)
         {
+            Logging.Log(info, "Print");
             ctlPrintText.Dispatcher.Invoke(new Action<string>(ctlPrintText.AppendAndScroll), System.Windows.Threading.DispatcherPriority.Background
                 , DateTime.Now.ToString("\r\n[HH:mm:ss] ") + info);
         }
@@ -81,9 +77,9 @@ namespace L4D2ModManager
         {
             this.Dispatcher.Invoke(() =>
             {
-                if (obj.GetType() == typeof(L4D2MM.ModInfo))
+                if (obj is L4D2MM.ModInfo)
                     if (key == m_displayedKey)
-                        LoadModInfo((L4D2MM.ModInfo)obj);
+                        LoadModInfo(obj as L4D2MM.ModInfo);
             }
             , System.Windows.Threading.DispatcherPriority.Background);
         }
@@ -145,6 +141,7 @@ namespace L4D2ModManager
 
         private void LoadModInfo(L4D2MM.ModInfo mod)
         {
+            var fontSize = this.FontSize;
             m_displayedKey = mod.Key;
             ctlFrameText.Document.Blocks.Clear();
             if (mod.Mod.ImageMemoryStream != null)
@@ -155,7 +152,7 @@ namespace L4D2ModManager
             if (mod.Mod.Title.Length > 0)
             {
                 Run run = new Run(mod.Mod.Title);
-                run.FontSize = 16;
+                run.FontSize = fontSize + 4;
                 run.Foreground = new SolidColorBrush(Colors.Black);
                 run.FontWeight = FontWeights.Bold;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
@@ -163,7 +160,7 @@ namespace L4D2ModManager
             if (mod.Mod.Author.Length > 0)
             {
                 Run run = new Run(StringAdapter.GetResource("Author") + " : " + mod.Mod.Author);
-                run.FontSize = 10;
+                run.FontSize = fontSize - 2;
                 run.Foreground = new SolidColorBrush(Colors.Gray);
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
@@ -171,7 +168,7 @@ namespace L4D2ModManager
             if (mod.Mod.Tags != null && mod.Mod.Tags.Length > 0)
             {
                 Run run = new Run(StringAdapter.GetResource("Tag") + " : \r\n" + mod.Mod.Tags.Aggregate((a, b) => a + ", " + b).ToString());
-                run.FontSize = 10;
+                run.FontSize = fontSize - 2;
                 run.Foreground = new SolidColorBrush(Colors.Black);
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
@@ -179,7 +176,7 @@ namespace L4D2ModManager
             if (mod.Mod.Description.Length > 0)
             {
                 Run run = new Run(StringAdapter.GetResource("Description") + " : \r\n" + mod.Mod.Description);
-                run.FontSize = 12;
+                run.FontSize = fontSize;
                 run.Foreground = new SolidColorBrush(Colors.Black);
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
@@ -357,6 +354,54 @@ namespace L4D2ModManager
             Exit();
         }
 
+        private void MenuItemCustomCategoryClick(object sender, RoutedEventArgs e)
+        {
+            Exit();
+        }
+
+        private void MenuItemLocalModClassifyRuleClick(object sender, RoutedEventArgs e)
+        {
+            Exit();
+        }
+
+        private void MenuItemFontSizeClick(object sender, RoutedEventArgs e)
+        {
+            double oldFontSize = FontSize;
+            var window = new WindowSetValue();
+            window.Owner = this;
+            window.Initialize(FontSize, StringAdapter.GetResource("Menu_FontSize"), StringAdapter.GetResource("Font_Size"));
+            window.Verify = o => (double)o >= 6 && (double)o <= 30;
+            window.VerifyErrorMsg = "-> [6.0, 30.0]";
+            window.FontSize = FontSize;
+            window.ShowDialog();
+            if (window.InputValue != null)
+            {
+                FontSize = (double)window.InputValue;
+                if(FontSize != oldFontSize)
+                {
+                    Configure.View.FontSize = FontSize;
+                    //refresh after new font size work!
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                         AdaptWindowSize(new Size(this.Width, this.Height)))
+                        , System.Windows.Threading.DispatcherPriority.Background);
+                }
+            }
+        }
+
+        private void MenuItemColorsClick(object sender, RoutedEventArgs e)
+        {
+            var window = new WindowColors();
+            window.Owner = this;
+            //window.FontSize = FontSize;
+            window.ShowDialog();
+            ctlListView.Items.Refresh();
+        }
+
+        private void MenuItemCollisionContentViewClick(object sender, RoutedEventArgs e)
+        {
+            Exit();
+        }
+
         private void MenuItemModSourceClick(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
@@ -377,6 +422,9 @@ namespace L4D2ModManager
                 Configure.Language = newlanguage;
                 //WindowCallbacks.Print(StringAdapter.GetInfo("ChangeLanguage"));
                 m_categorySelected.RefreshLanguage();
+                InitializeListViewMenu();
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(newlanguage);
+                Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(newlanguage);
                 Logging.Log("change language to " + newlanguage);
 
                 //refresh check box
@@ -404,20 +452,23 @@ namespace L4D2ModManager
 
         private void AdaptWindowSize(Size size)
         {
+            double referHeight = ctlProgressText.ActualHeight;
             double totalHeight = size.Height;
             double totalWidth = size.Width - 20;
             double printBoxHeightFactor = 0.12;
             double contentDivideFactor = 0.354;
             double imageFactor = 36.0 / 64.0;
-            double contentHeight = totalHeight - ctlMenu.ActualHeight - 30 - printBoxHeightFactor * totalHeight - ctlProgressBar.ActualHeight - ctlProgressText.ActualHeight - 53;
+            double contentHeight = totalHeight - ctlMenu.ActualHeight - referHeight - printBoxHeightFactor * totalHeight - ctlProgressBar.ActualHeight - ctlProgressText.ActualHeight - 73;
             double imageWidth = Math.Min(500, (totalWidth - 4) * contentDivideFactor);
             double imageHeight = imageFactor * imageWidth;
+            ctlCategoryList.SetSize(Math.Max(140, 14.0 / 84 * totalWidth), referHeight + 5);
+            ctlSubcategoryList.SetSize(ctlCategoryList.Width, ctlCategoryList.Height);
             ctlListView.SetSize(totalWidth - 4 - imageWidth, contentHeight);
             ctlImage.SetSize(imageWidth, imageHeight);
             ctlFrameText.SetSize(imageWidth, contentHeight - imageHeight - 4 - 2);
             ctlPrintText.SetSize(totalWidth, printBoxHeightFactor * totalHeight);
-            ctlProgressBar.SetSize(totalWidth, ctlProgressBar.ActualHeight);
-            ctlProgressText.SetSize(totalWidth, ctlProgressText.ActualHeight);
+            ctlProgressBar.Width = totalWidth;
+            ctlProgressText.Width = totalWidth;
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e)

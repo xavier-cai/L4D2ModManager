@@ -1,0 +1,17 @@
+﻿<Window x:Class="L4D2ModManager.WindowSetValue"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:L4D2ModManager"
+        mc:Ignorable="d"
+        Title="WindowSetValue" Height="80" Width="300" Loaded="WindowLoaded" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
+    <Grid>
+        <StackPanel Margin="10, 10, 10, 10" Orientation="Horizontal" >
+            <Label Name="ctlLabel" Content="Value" VerticalContentAlignment="Center"/>
+            <Label Name="ctlAnchor" Content=" : " VerticalContentAlignment="Center"/>
+            <TextBox Name="ctlTextBox" Width="180" Text="" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button Name="ctlBtn" Margin="10,0,0,0" Content="{DynamicResource Text_OK}" Click="ButtonOkClick"/>
+        </StackPanel>
+    </Grid>
+</Window>

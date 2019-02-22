@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
 
 namespace L4D2ModManager
 {
-    
+
     class Logging
     {
         [DllImport("Kernel32.dll")]
@@ -68,10 +64,27 @@ namespace L4D2ModManager
 #endif
         }
 
+        static string LogFile = "log.txt";
+        static bool LogFileInitialized = false;
+        static object LockObject = new object();
         static public void Log<T>(T msg, string level = "Normal")
         {
+#if DEBUG
             WriteLine('[' + level + ']' + ' ' + msg.ToString());
-            //MessageBox.Show(msg, level);
+#else
+            lock (LockObject)
+            {
+                if (Configure.ReleaseLogToFile)
+                {
+                    if (!LogFileInitialized)
+                    {
+                        System.IO.File.WriteAllText(LogFile, DateTime.Now.ToString() + "\r\n");
+                        LogFileInitialized = true;
+                    }
+                    System.IO.File.AppendAllText(LogFile, '[' + level + ']' + ' ' + msg.ToString() + "\r\n");
+                }
+            }
+#endif
         }
 
         static public void Warn<T>(T msg)
@@ -81,7 +94,7 @@ namespace L4D2ModManager
 
         static public void Error(string msg = "", string level = "Error")
         {
-            WriteLine('[' + level + ']' + ' ' + msg);
+            Log(msg, level);
             Pause();
             //MessageBox.Show(msg, level);
             System.Environment.Exit(0);
@@ -91,6 +104,7 @@ namespace L4D2ModManager
         {
             if (!cond)
             {
+                throw new InvalidOperationException();
                 Error(msg, "ASSERT");
             }
         }
