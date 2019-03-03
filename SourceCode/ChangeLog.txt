@@ -4,6 +4,8 @@ version 1.0.2
 -add search box
 -add custom contends include custom category & cusom classify
 -rewrite UI framework to help adapting window size and placing controls
+-add language select window in first launch
+-backup for addon-list
 -fix some logical bugs
 
 version 1.0.1
