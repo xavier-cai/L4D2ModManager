@@ -3,7 +3,7 @@ version 1.0.2
 -complete the function of classify MOD by VPK file
 -add search box
 -list view can be sort now
--add custom contends include custom category & cusom classify
+-add custom contends include custom category & custom classification
 -rewrite UI framework to help adapting window size and placing controls
 -add language select window in first launch
 -backup for addon-list

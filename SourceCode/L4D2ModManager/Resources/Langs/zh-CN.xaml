@@ -27,7 +27,7 @@
     <s:String x:Key="Label_SubCategory">子分类</s:String>
     <s:String x:Key="Label_Search">查找：</s:String>
     <s:String x:Key="Label_Regex">正则表达式</s:String>
-    <s:String x:Key="Label_ClassifyRule">分类规则</s:String>
+    <s:String x:Key="Label_ClassificationRule">分类规则</s:String>
     <s:String x:Key="Col_ModId">标识符</s:String>
     <s:String x:Key="Col_ModSource">来源</s:String>
     <s:String x:Key="Col_ModState">状态</s:String>
@@ -48,7 +48,7 @@
     <s:String x:Key="Menu_SetPath">设置游戏路径</s:String>
     <s:String x:Key="Menu_Exit">退出</s:String>
     <s:String x:Key="Menu_CustomCategory">自定义分类</s:String>
-    <s:String x:Key="Menu_LocalModClassifyRule">本地Mod分类规则</s:String>
+    <s:String x:Key="Menu_LocalModClassificationRule">本地Mod分类规则</s:String>
     <s:String x:Key="Menu_FontSize">设置字号</s:String>
     <s:String x:Key="Menu_Colors">颜色方案</s:String>
     <s:String x:Key="Menu_CollisionContentView">冲突内容视图</s:String>

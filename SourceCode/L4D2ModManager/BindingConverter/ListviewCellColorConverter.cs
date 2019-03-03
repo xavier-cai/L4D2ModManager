@@ -19,7 +19,7 @@ namespace L4D2ModManager
                 m_matches.Add(L4D2MM.ModState.Unsubscribed, () => Configure.View.StateUnsubscribed);
                 m_matches.Add(L4D2MM.ModState.Miss, () => Configure.View.StateMiss);
                 m_matches.Add(L4D2MM.ModState.Off, () => Configure.View.StateOff);
-                m_matches.Add(L4D2MM.ModState.On, () => Configure.View.StateOff);
+                m_matches.Add(L4D2MM.ModState.On, () => Configure.View.StateOn);
             }
 
             public Color Match(L4D2MM.ModState key)

@@ -66,7 +66,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="{DynamicResource Label_ClassifyRule}" Grid.Row="3" FontWeight="Bold"/>
+            <Label Content="{DynamicResource Label_ClassificationRule}" Grid.Row="3" FontWeight="Bold"/>
             <Button Grid.Column="2" Margin="2, 3" Padding="5, 0" Content="+" Click="OnButtonAddRuleClick"/>
         </Grid>
         <ListView Grid.Row="4" Name="ctlListViewRules" ItemContainerStyle="{StaticResource ListviewClassifyRowStyle}" Foreground="Black">

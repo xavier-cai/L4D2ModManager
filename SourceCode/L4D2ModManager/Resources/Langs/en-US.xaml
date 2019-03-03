@@ -6,7 +6,7 @@
     <s:String x:Key="Label_SubCategory">Subcategory</s:String>
     <s:String x:Key="Label_Search">Search : </s:String>
     <s:String x:Key="Label_Regex">Regexes</s:String>
-    <s:String x:Key="Label_ClassifyRule">Classify rules</s:String>
+    <s:String x:Key="Label_ClassificationRule">Classification rules</s:String>
     <s:String x:Key="Col_ModId">ID</s:String>
     <s:String x:Key="Col_ModSource">Source</s:String>
     <s:String x:Key="Col_ModState">State</s:String>
@@ -27,7 +27,7 @@
     <s:String x:Key="Menu_SetPath">Set game path</s:String>
     <s:String x:Key="Menu_Exit">Exit</s:String>
     <s:String x:Key="Menu_CustomCategory">Custom category</s:String>
-    <s:String x:Key="Menu_LocalModClassifyRule">Local MOD classify rules</s:String>
+    <s:String x:Key="Menu_LocalModClassificationRule">Local MOD classification rules</s:String>
     <s:String x:Key="Menu_FontSize">Font size</s:String>
     <s:String x:Key="Menu_Colors">Colors</s:String>
     <s:String x:Key="Menu_CollisionContentView">Collision content view</s:String>

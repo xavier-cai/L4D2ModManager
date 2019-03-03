@@ -168,7 +168,7 @@ namespace L4D2ModManager
                 System.IO.File.WriteAllText(CustomCategoryFile, Newtonsoft.Json.JsonConvert.SerializeObject(CategoryRoot));
                 Logging.Log("Saving regexes");
                 System.IO.File.WriteAllText(CustomRegexFile, Newtonsoft.Json.JsonConvert.SerializeObject(CustomRegex));
-                Logging.Log("Saving classify rules");
+                Logging.Log("Saving classification rules");
                 System.IO.File.WriteAllText(CustomClassifyFile, Newtonsoft.Json.JsonConvert.SerializeObject(CustomClassify));
             }
             void InitializeCategory()
@@ -236,7 +236,7 @@ namespace L4D2ModManager
             }
             void InitializeCustomClassify()
             {
-                Logging.Log("Custom : Initialize Classify Rules");
+                Logging.Log("Custom : Initialize Classification Rules");
                 CustomClassify = new List<Pair<string, string>>();
                 CustomClassify.Add(new Pair<string, string>("<Maps>", "campaigns"));
                 CustomClassify.Add(new Pair<string, string>("<Scripts>", "scripts"));

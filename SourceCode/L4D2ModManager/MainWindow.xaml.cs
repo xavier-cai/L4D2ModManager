@@ -416,10 +416,10 @@ namespace L4D2ModManager
                 mod.RefreshResources();
         }
 
-        private void MenuItemLocalModClassifyRuleClick(object sender, RoutedEventArgs e)
+        private void MenuItemLocalModClassificationRuleClick(object sender, RoutedEventArgs e)
         {
             var window = new WindowClassify();
-            window.Title = StringAdapter.GetResource("Menu_LocalModClassifyRule");
+            window.Title = StringAdapter.GetResource("Menu_LocalModClassificationRule");
             window.FontSize = FontSize;
             window.Owner = this;
             window.ShowDialog();

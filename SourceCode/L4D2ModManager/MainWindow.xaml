@@ -37,7 +37,7 @@
             </MenuItem>
             <MenuItem Header="{DynamicResource Menu_Edit}">
                 <MenuItem Header="{DynamicResource Menu_CustomCategory}" Click="MenuItemCustomCategoryClick"/>
-                <MenuItem Header="{DynamicResource Menu_LocalModClassifyRule}" Click="MenuItemLocalModClassifyRuleClick"/>
+                <MenuItem Header="{DynamicResource Menu_LocalModClassificationRule}" Click="MenuItemLocalModClassificationRuleClick"/>
             </MenuItem>
             <MenuItem Header="{DynamicResource Menu_View}">
                 <MenuItem Header="{DynamicResource Menu_FontSize}" Click="MenuItemFontSizeClick"/>
