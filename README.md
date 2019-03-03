@@ -18,18 +18,51 @@ The screenshot of the software is just like below :
 ## Functions
 - Read subscribed items' information from Steam workshop (logined Steam is required)
 - Try read information from Steam workshop for local MOD files (players may move their subscribed items to custom MOD directory)
-- Read local VPK (MOD) files (not complete)
-- Classify all MODs by tags
-- Detect conflicts by tags
+- Read local VPK (MOD) files
+- Classify MODs by tags
+- Classify MODs by VPK files
+- Custom category and classification rules
+- Detect conflicts by categories
 - Set On/Off or Subscribe/Unsubscribe without launching game
 
 ## Incomplete functions
-- Detect conflicts by reading local VPK (MOD) files
-- Classify MODs by custom rules
 - Download/Update MODs without launching game
 
 ## How to download it
 Here is the ZIP file link : [Download](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
+
+## How to classify MODs by custom rules
+This tool allows you to create your own classification rules about file/directory information of VPK file.
+
+### Custom category
+The UI is displayed below:
+
+![](./Introduction/english/category.png)
+
+The name property is just for display.
+
+The keywords property is using in classification and tag matching, separate keywords by `';'`, for example, both `zoey` and `teenangst` mean Zoey in this game.
+
+### Custom classification rule
+The UI is displayed below:
+
+![](./Introduction/english/classify.png)
+
+**Functions**
+
+The first part is regexes, you can define regexes here to match file/directory name when reading VPK file, and each regex has a reference name which will be used in the second part. Be careful, the regex is required to match the full file name or directory path.
+
+The second part is classification rules, using results of regexes to classify MODs. Logic property shows how to judge a MOD whether or not belong to a specific category.
+
+**Expression**
+
+In logic property, using `<ReferenceName>` to present the result value (success/failed) of regex which named `ReferenceName`, using `&` `|` and '!'  to present logical operation, using `()` to change operation order.
+
+In category property, you need to give a keyword of the target category, if different categories sharing the same keyword, you can use operation dot (`.`) to specialize the target category. The first usage is using category level: `1` means category while `2` means subcategory, so you can use `1.survivors` or `2.zoey`; The second usage is using the relationship between parent and child, such as `survivors.zoey`. What's more? You can use captures in regexes to replace strings here, the format is `<ReferenceName.CaptureIndex>`.
+
+**Example**
+
+Here is an example, the MODs that contains a model file of survivors are belong to the survivors category, so we created a regex which named `Survivor` to match the model files in VPK file, at the same time, we can capture the survivor's name which contained in the file name, then the expression `<Survivor>` in logic property means match result of the regex `Survivor`, if successful, the MOD will be classified to the survivor's category which is present by a capture expression `<Survivor.1>`.
 
 ## Development environment
 - .NET 4.5.2
@@ -77,17 +110,50 @@ cxw39@foxmail.com
 - 从Steam创意工坊读取订阅物品信息(需要在已登陆的Steam)
 - 为本地MOD读取Steam创意工坊的信息(玩家有时会把订阅的物品移动到自定义MOD文件夹)
 - 从本地文件读取VPK(MOD)文件
-- 将所有MOD按标签分类
-- 按标签检测MOD冲突
+- 将MOD按标签分类
+- 将MOD按VPK文件包含内容分类
+- 自定义分类和分类方案
+- 按分类检测MOD冲突
 - 在软件内完成设置MOD的开启/关闭、以及订阅/取消订阅等操作
 
 ## 未完成的功能
-- 从VPK(MOD)文件中读取信息进行冲突检测
-- 自定义MOD分类规则
 - 在软件内完成MOD的下载/更新等操作
 
 ## 下载方式
 压缩包下载链接：[下载](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
+
+## 如何自定义分类和分类方案
+这个工具允许你创建分类和用于在读取VPK文件时使用的分类规则
+
+### 自定义分类
+界面如下：
+
+![](./Introduction/simple-chinese/category.png)
+
+类名属性仅用于显示.
+
+关键字属性用于分类和标签匹配, 关键字之间使用英文分号(`;`)隔开, 关键字示例,：`zoey`和`teenangst`在游戏里都用于描述Zoey。
+
+### 自定义分类规则
+界面如下:
+
+![](./Introduction/simple-chinese/classify.png)
+
+**功能**
+
+第一部分是正则表达式，在这定义用于匹配VPK文件中文件名或目录的正则表达式，每个正则表达式都需要一个后续会用到的引用标识符(给它起个名~)。 需要注意的是，正则表达式需要能匹配完整的文件或目录路径才行。
+
+第二部分是分类规则，使用正则表达式的匹配结果来分类。命中逻辑属性用于判断MOD是否属于某个特定的分类。
+
+**表达式**
+
+在命中逻辑属性中, 用 `<ReferenceName>` 来表示引用表示符为`ReferenceName`的正则表达式的匹配结果(成功/失败)，使用 `&`、`|` 和 '!'与或非逻辑运算, 使用括号 `()` 来改变逻辑运算顺序。
+
+在目标分类属性中，需要给定一个目标分类的关键字，如果不同的分类共享相同的关键字，你可以使用点操作符(`.`)来特指你的目标分类。第一种用法是使用分类的级别：`1`意味着主分类，`2`意味着子分类，所以你就能用类似于`1.survivors`或`2.zoey`的表达式; 第二种用法是通过父子关系, 比如`survivors.zoey`。另外，你还能在这里使用正则表达式中捕获的字符串，使用的语法格式为`<ReferenceName.CaptureIndex>`。
+
+**示例**
+
+我们认为如果MOD的VPK文件中包含了求生者的模型文件则其应该属于求生者分类，所以我们先定义了引用标识符为`Survivor`的正则表达式来匹配刚刚说VPK中的模型文件，同时我们还能通过正则表达式捕获包含在文件名中的求生者的名字，然后在命中逻辑中的`<Survivor>`表示正则表达式`Survivor`的匹配结果，如果成功，MOD就会被分类到捕获表达式`<Survivor.1>`对应的求生者分类中。
 
 ## 开发环境
 - .NET 4.5.2
