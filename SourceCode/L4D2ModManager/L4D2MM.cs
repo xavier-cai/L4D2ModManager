@@ -59,9 +59,19 @@ namespace L4D2ModManager
 
             public bool CanSetOn => ModState == ModState.Off;
             public bool CanSetOff => ModState == ModState.On || ModState == ModState.Unregisted;
-            public bool CanSubcribe => Source == ModSource.Workshop && ModState == ModState.Unsubscribed;
-            public bool CanUnsubscribe => Source == ModSource.Workshop && (ModState == ModState.On || ModState == ModState.Off || ModState == ModState.Unregisted);
+            public bool CanSubcribe => Manager.SteamEnabled && Source == ModSource.Workshop && ModState == ModState.Unsubscribed;
+            public bool CanUnsubscribe => Manager.SteamEnabled && Source == ModSource.Workshop && (ModState == ModState.On || ModState == ModState.Off || ModState == ModState.Unregisted);
             public bool CanDelete => Source == ModSource.Player;
+
+            private void RegistResource()
+            {
+                base.Regist(item =>
+                {
+                    if (item.Identity is L4D2Type.Category)
+                        return (item.Identity as L4D2Type.Category).SingletonResource;
+                    return true;
+                });
+            }
 
             private bool Switch(bool check, ModState t)
             {
@@ -69,7 +79,7 @@ namespace L4D2ModManager
                     return false;
                 Manager.ChangeModState(Key, t);
                 if (CanSetOff && !IsIgnoreCollision)
-                    base.Regist();
+                    RegistResource();
                 else if (CanSetOn || CanSubcribe)
                     base.Unregist();
                 return true;
@@ -80,20 +90,21 @@ namespace L4D2ModManager
             public bool Subscribe() { return Switch(CanSubcribe, ModState.On); }
             public bool Unsubscribe() { return Switch(CanUnsubscribe, ModState.Unsubscribed); }
             public bool IgnoreCollision() { base.Unregist(); return Manager.IgnoreModCollision(Key); }
-            public bool DetectCollision() { base.Regist(); return Manager.DetectModCollision(Key); }
+            public bool DetectCollision() { RegistResource(); return Manager.DetectModCollision(Key); }
             public bool Delete() { base.Unregist(); return Manager.DeleteMod(Key); }
 
             public void RefreshResources()
             {
+                base.ClearResource();
+
                 if (Mod != null)
                 {
-                    foreach (var a in Mod.Category)
-                        foreach (var b in Mod.SubCategory(a))
-                            base.AddResource(L4D2Resource.GetResource(a, b));
+                    foreach (var c in Mod.Category)
+                        base.AddResource(L4D2Resource.GetResource(c));
                 }
 
                 if (CanSetOff && !IsIgnoreCollision)
-                    base.Regist();
+                    RegistResource();
             }
 
             public void Dispose()
@@ -140,6 +151,7 @@ namespace L4D2ModManager
             Logging.Log("save ignore list to file");
         }
 
+        public bool SteamEnabled => m_steam != null;
         public bool SetEnableSteam(bool enable)
         {
             Logging.Log("enable Steam " + enable.ToString());
@@ -160,7 +172,7 @@ namespace L4D2ModManager
                     //LoadSteamWorkshop();
                 }
             }
-            return m_steam != null;
+            return m_steam != null || !enable;
         }
 
         class DelegateSteamResult
@@ -284,9 +296,9 @@ namespace L4D2ModManager
                 string key = @"workshop\" + vpkFile.Name;
                 if (!m_modStates.ContainsKey(key))
                 {
-                    continue; //local file not valid in this path
+                    //continue; //local file not valid in this path
                     L4D2Mod mod = new L4D2Mod(vpkFile, true);
-                    ModInfo info = new ModInfo(this, key, ModState.On, ModSource.Workshop, mod);
+                    ModInfo info = new ModInfo(this, key, SteamEnabled ? ModState.Unsubscribed : ModState.On, ModSource.Workshop, mod);
                     m_modStates.Add(key, info);
                 }
                 else
@@ -374,6 +386,7 @@ namespace L4D2ModManager
             foreach (var v in m_modStates)
                 v.Value.Dispose();
             m_modStates.Clear();
+            L4D2Mod.FastCategoryMatchMap.Clear();
         }
 
         public bool LoadConfig()
@@ -444,7 +457,7 @@ namespace L4D2ModManager
         {
             if (path != null && path != "")
             {
-                L4D2TxtReader reader = new L4D2TxtReader(new FileStream(path + m_fileList, FileMode.Open), L4D2TxtReader.TxtType.AddonList);
+                L4D2TxtReader reader = new L4D2TxtReader(path + m_fileList, L4D2TxtReader.TxtType.AddonList);
                 ModInfo nullModeInfo = new ModInfo(this, null, ModState.Miss, ModSource.Player, null);
                 nullModeInfo.ModState = ModState.Miss;
                 //update state of mods
@@ -560,7 +573,7 @@ namespace L4D2ModManager
             ModState oldState = mod.ModState;
             if (oldState != state)
             {
-                Logging.Log("change mod " + key + " from " + oldState.ToString() + " to " + oldState.ToString());
+                Logging.Log("change mod " + key + " state from " + oldState.ToString() + " to " + state.ToString());
                 if(oldState == ModState.Unsubscribed)
                     m_steam.Workshop.GetItem(mod.Mod.PublishedId).Subscribe();
                 if (state == ModState.Unsubscribed)
@@ -573,6 +586,7 @@ namespace L4D2ModManager
             }
         }
 
+        private static bool Backup = false;
         public bool SaveModState()
         {
             if (!IsReadAddonList)
@@ -587,11 +601,31 @@ namespace L4D2ModManager
             }
             try
             {
+                if(!Backup)
+                {
+                    FileInfo bak = new FileInfo(m_path + m_fileList);
+                    if (bak.Exists)
+                        bak.CopyTo(m_path + m_fileList + ".bak", true);
+                    Backup = true;
+                }
+
                 StringBuilder sb = new StringBuilder();
                 sb.Append("\"AddonList\"\n{\n");
+                L4D2TxtReader reader = new L4D2TxtReader(m_path + m_fileList, L4D2TxtReader.TxtType.AddonList);
+                foreach (var v in reader.Values)
+                {
+                    var value = v.Value;
+                    if (m_modStates.ContainsKey(v.Key))
+                    {
+                        if (m_modStates[v.Key].ModState == ModState.On || m_modStates[v.Key].ModState == ModState.Off)
+                            value = (m_modStates[v.Key].ModState == ModState.On ? "1" : "0");
+                    }
+                    sb.Append("\t\"" + v.Key + "\"\t\t\"" + value + "\"\n");
+                }
                 foreach (var v in m_modStates)
-                    if (v.Value.ModState == ModState.On || v.Value.ModState == ModState.Off)
-                        sb.Append("\t\"" + v.Key + "\"\t\t\"" + (v.Value.ModState == ModState.On ? '1' : '0') + "\"\n");
+                    if(reader.Values.FindIndex(match => match.Key.Equals(v.Key)) < 0)
+                        if (v.Value.ModState == ModState.On || v.Value.ModState == ModState.Off)
+                            sb.Append("\t\"" + v.Key + "\"\t\t\"" + (v.Value.ModState == ModState.On ? '1' : '0') + "\"\n");
                 sb.Append("}\n");
                 File.WriteAllText(m_path + '\\' + m_fileList, sb.ToString());
                 Logging.Log("save mod state to file : " + m_path + '\\' + m_fileList);

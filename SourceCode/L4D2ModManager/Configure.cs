@@ -49,6 +49,7 @@ namespace L4D2ModManager
         public class ViewContent
         {
             public double FontSize = 12.0;
+            public System.Windows.Size WindowSize = new System.Windows.Size(860, 580);
             public Color IndicatorNormal = Colors.LightGreen;
             public Color IndicatorCollision = Colors.Red;
             public Color IndicatorIgnore = Colors.Yellow;
@@ -75,10 +76,10 @@ namespace L4D2ModManager
                 ReleaseLogToFile = true;
                 InstallPath = "";
                 EnableSteam = true;
-                EnableReadVpk = false;
+                EnableReadVpk = true;
                 EnableAddons = true;
-                Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
                 DelegateSteam = true;
+                Language = null;
             }
         }
         
@@ -93,6 +94,16 @@ namespace L4D2ModManager
                     LoadConfigure();
                 if (_ContentInstance == null)
                     _ContentInstance = new Content();
+                if(_ContentInstance.Language == null)
+                {
+                    var language = new WindowLanguage();
+                    language.Init = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                    language.FontSize = 14.0;
+                    language.ShowDialog();
+                    if (language.Result == null)
+                        System.Windows.Application.Current.Shutdown();
+                    _ContentInstance.Language = language.Result as string;
+                }
                 return _ContentInstance;
             }
         }

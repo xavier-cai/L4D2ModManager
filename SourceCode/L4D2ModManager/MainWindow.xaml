@@ -24,117 +24,154 @@
         <DropShadowEffect Opacity="0.3" BlurRadius="15" ShadowDepth="1"/>
     </Window.Effect>
     <Grid>
-        <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
-            <Menu Name="ctlMenu">
-                <MenuItem Header="{DynamicResource Menu_File}">
-                    <MenuItem Header="{DynamicResource Menu_SetPath}" Click="MenuItemSetPathClick"/>
-                    <MenuItem Header="{DynamicResource Menu_Reload}" Click="MenuItemReloadManagerClick" />
-                    <Separator />
-                    <MenuItem Header="{DynamicResource Menu_Exit}" Click="MenuItemExitClick" />
-                </MenuItem>
-                <MenuItem Header="{DynamicResource Menu_Edit}">
-                    <MenuItem Header="{DynamicResource Menu_CustomCategory}" Click="MenuItemCustomCategoryClick" IsEnabled="False"/>
-                    <MenuItem Header="{DynamicResource Menu_LocalModClassifyRule}" Click="MenuItemLocalModClassifyRuleClick" IsEnabled="False"/>
-                </MenuItem>
-                <MenuItem Header="{DynamicResource Menu_View}">
-                    <MenuItem Header="{DynamicResource Menu_FontSize}" Click="MenuItemFontSizeClick"/>
-                    <MenuItem Header="{DynamicResource Menu_Colors}" Click="MenuItemColorsClick"/>
-                    <Separator />
-                    <MenuItem Header="{DynamicResource Menu_CollisionContentView}" Click="MenuItemCollisionContentViewClick" IsEnabled="False"/>
-                </MenuItem>
-                <MenuItem Header="{DynamicResource Menu_Option}">
-                    <MenuItem Name="ctlMenuModsource" Header="{DynamicResource Menu_ModSource}">
-                        <MenuItem Header="{DynamicResource Menu_SourceWorkshop}" IsCheckable="True" IsEnabled="False" Click="MenuItemModSourceClick">
-                            <MenuItem.DataContext>
-                                <local:ModSource>Workshop</local:ModSource>
-                            </MenuItem.DataContext>
-                        </MenuItem>
-                        <MenuItem Header="{DynamicResource Menu_SourceAddons}" IsCheckable="True" Click="MenuItemModSourceClick">
-                            <MenuItem.DataContext>
-                                <local:ModSource>Player</local:ModSource>
-                            </MenuItem.DataContext>
-                        </MenuItem>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Name="ctlMenu">
+            <MenuItem Header="{DynamicResource Menu_File}">
+                <MenuItem Header="{DynamicResource Menu_SetPath}" Click="MenuItemSetPathClick"/>
+                <MenuItem Header="{DynamicResource Menu_Reload}" Click="MenuItemReloadManagerClick" />
+                <Separator />
+                <MenuItem Header="{DynamicResource Menu_Exit}" Click="MenuItemExitClick" />
+            </MenuItem>
+            <MenuItem Header="{DynamicResource Menu_Edit}">
+                <MenuItem Header="{DynamicResource Menu_CustomCategory}" Click="MenuItemCustomCategoryClick"/>
+                <MenuItem Header="{DynamicResource Menu_LocalModClassifyRule}" Click="MenuItemLocalModClassifyRuleClick"/>
+            </MenuItem>
+            <MenuItem Header="{DynamicResource Menu_View}">
+                <MenuItem Header="{DynamicResource Menu_FontSize}" Click="MenuItemFontSizeClick"/>
+                <MenuItem Header="{DynamicResource Menu_Colors}" Click="MenuItemColorsClick"/>
+                <!--Separator />
+                    <MenuItem Header="{DynamicResource Menu_CollisionContentView}" Click="MenuItemCollisionContentViewClick" IsEnabled="False"/-->
+            </MenuItem>
+            <MenuItem Header="{DynamicResource Menu_Option}">
+                <MenuItem Name="ctlMenuModsource" Header="{DynamicResource Menu_ModSource}">
+                    <MenuItem Header="{DynamicResource Menu_SourceWorkshop}" IsCheckable="True" IsEnabled="False" Click="MenuItemModSourceClick">
+                        <MenuItem.DataContext>
+                            <local:ModSource>Workshop</local:ModSource>
+                        </MenuItem.DataContext>
                     </MenuItem>
-                    <MenuItem Header="{DynamicResource Menu_Analytics}" >
-                        <MenuItem Name="ctlMenuEnableSteam" Header="{DynamicResource Menu_SteamWorkshop}" IsCheckable="True" IsEnabled="False"/>
-                        <MenuItem Name="ctlMenuEnableVpk" Header="{DynamicResource Menu_LocalVpk}" IsCheckable="True" IsEnabled="False"/>
-                    </MenuItem>
-                    <Separator />
-                    <MenuItem Name="ctlMenuLanguage" Header="{DynamicResource Menu_Language}" >
-                        <MenuItem Header="简体中文" IsCheckable="True" Click="MenuItemLanguageClick">
-                            <MenuItem.DataContext>
-                                <System:String>zh-CN</System:String>
-                            </MenuItem.DataContext>
-                        </MenuItem>
-                        <MenuItem Header="English" IsCheckable="True" Click="MenuItemLanguageClick">
-                            <MenuItem.DataContext>
-                                <System:String>en-US</System:String>
-                            </MenuItem.DataContext>
-                        </MenuItem>
+                    <MenuItem Header="{DynamicResource Menu_SourceAddons}" IsCheckable="True" Click="MenuItemModSourceClick">
+                        <MenuItem.DataContext>
+                            <local:ModSource>Player</local:ModSource>
+                        </MenuItem.DataContext>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{DynamicResource Menu_About}">
-                    <MenuItem Header="{DynamicResource Menu_About}" Click="MenuItemAboutClick" />
+                <MenuItem Header="{DynamicResource Menu_Analytics}" >
+                    <MenuItem Name="ctlMenuEnableSteam" Header="{DynamicResource Menu_SteamWorkshop}" IsCheckable="True" Click="MenuItemEnableSteamClick"/>
+                    <MenuItem Name="ctlMenuEnableVpk" Header="{DynamicResource Menu_LocalVpk}" IsCheckable="True" Click="MenuItemEnableVpkClick"/>
                 </MenuItem>
-            </Menu>
-            <StackPanel Margin="2,0,0,0">
-                <StackPanel Name="ctlCategoryPanel" HorizontalAlignment="Left" Margin="0,10,0,5" VerticalAlignment="Center" Width="840" Orientation="Horizontal">
-                    <Label Name="ctlLabel" Content="{DynamicResource Label_MainCategory}" Margin="0,0,0,0" VerticalContentAlignment="Center" />
-                    <ComboBox x:Name="ctlCategoryList" Width="140" Height="20" Margin="10,0,0,0"/>
-                    <Label Content="{DynamicResource Label_SubCategory}" Margin="30,0,0,0" VerticalContentAlignment="Center" />
-                    <ComboBox x:Name="ctlSubcategoryList" Width="140" Height="20" Margin="10,0,0,0"/>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Orientation="Horizontal">
-                    <StackPanel HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
-                        <ListView x:Name="ctlListView" Height="400" Width="540" HorizontalContentAlignment="Center" ItemContainerStyle="{StaticResource ListViewItemStyle}" SelectionChanged="ListViewSelectionChanged" Foreground="Black" MouseRightButtonUp="ListViewMouseRightButtonUp">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Width="230" Header="{DynamicResource Col_ModId}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                                    <TextBlock Margin="0,0,5,0" Width="10" Background="{Binding Mod, Converter={StaticResource ListviewCollisionColorConverter}}" ToolTipService.BetweenShowDelay="0" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="6000">
-                                                        <TextBlock.ToolTip>
-                                                            <ToolTip>
-                                                                <TextBlock Text="{Binding Mod, Converter={StaticResource ListviewTooltipConverter}}" TextWrapping="NoWrap" />
-                                                            </ToolTip>
-                                                        </TextBlock.ToolTip>
+                <Separator />
+                <MenuItem Name="ctlMenuLanguage" Header="{DynamicResource Menu_Language}" >
+                    <MenuItem Header="简体中文" IsCheckable="True" Click="MenuItemLanguageClick">
+                        <MenuItem.DataContext>
+                            <System:String>zh-CN</System:String>
+                        </MenuItem.DataContext>
+                    </MenuItem>
+                    <MenuItem Header="English" IsCheckable="True" Click="MenuItemLanguageClick">
+                        <MenuItem.DataContext>
+                            <System:String>en-US</System:String>
+                        </MenuItem.DataContext>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="{DynamicResource Menu_About}">
+                <MenuItem Header="{DynamicResource Menu_About}" Click="MenuItemAboutClick" />
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1" Margin="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0, 5, 0, 2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{DynamicResource Label_MainCategory}" Margin="0,0,0,0" />
+                <ComboBox Grid.Column="1" x:Name="ctlCategoryList"  Margin="10,0,0,0" MinWidth="150"/>
+                <Label Grid.Column="2" Content="{DynamicResource Label_SubCategory}" Margin="30,0,0,0" />
+                <ComboBox Grid.Column="3" x:Name="ctlSubcategoryList" Margin="10,0,0,0" MinWidth="150"/>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0, 2, 0, 2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="0, 0, 2, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="{DynamicResource Label_Search}"/>
+                        <TextBox Grid.Column="1" Name="ctlTextSearch" MaxLines="1" MaxLength="30"/>
+                    </Grid>
+                    <ListView Grid.Row="1" x:Name="ctlListView" HorizontalContentAlignment="Center" ItemContainerStyle="{StaticResource ListViewItemStyle}" SelectionChanged="ListViewSelectionChanged" Foreground="Black" MouseRightButtonUp="ListViewMouseRightButtonUp" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="230" Header="{DynamicResource Col_ModId}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <TextBlock Margin="0,0,5,0" Width="10" Background="{Binding Mod, Converter={StaticResource ListviewCollisionColorConverter}}" ToolTipService.BetweenShowDelay="0" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="6000">
+                                                    <TextBlock.ToolTip>
+                                                        <ToolTip>
+                                                            <TextBlock Text="{Binding Mod, Converter={StaticResource ListviewTooltipConverter}}" TextWrapping="NoWrap" />
+                                                        </ToolTip>
+                                                    </TextBlock.ToolTip>
                                                     </TextBlock>
-                                                    <TextBlock Text="{Binding ID}" TextAlignment="Center"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Width="100" Header="{DynamicResource Col_ModSource}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Source}" TextAlignment="Center"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Width="100" Header="{DynamicResource Col_ModState}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding State}" Foreground="{Binding State, Converter={StaticResource ListviewCellColorConverter}}" TextAlignment="Center" FontWeight="Bold"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Width="80"  Header="{DynamicResource Col_ModSize}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Size}" TextAlignment="Right"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </StackPanel>
-                    <StackPanel HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Top">
-                        <!-- 640 x 360 -->
-                        <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,4">
-                            <Image x:Name="ctlImage" Width="296" Height="146">
-                                <!--Image.OpacityMask>
+                                                <TextBlock Text="{Binding ID}" TextAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="{DynamicResource Col_ModSource}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Source}" TextAlignment="Center"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="{DynamicResource Col_ModState}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding State}" Foreground="{Binding State, Converter={StaticResource ListviewCellColorConverter}}" TextAlignment="Center" FontWeight="Bold"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="70"  Header="{DynamicResource Col_ModSize}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Size}" TextAlignment="Right"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                <Grid Grid.Column="1" Margin="2,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!-- 640 x 360 -->
+                    <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1">
+                        <Image x:Name="ctlImage" Width="296" Height="146">
+                            <!--Image.OpacityMask>
                                     <LinearGradientBrush StartPoint="0,1" EndPoint="1,1">
                                         <GradientStop Color="Transparent" Offset="0"/>
                                         <GradientStop Color="White" Offset="0.2"/>
@@ -142,17 +179,14 @@
                                         <GradientStop Color="Transparent" Offset="1"/>
                                     </LinearGradientBrush>
                                 </-->
-                            </Image>
-                        </Border>
-                        <RichTextBox x:Name="ctlFrameText" Height="250" IsReadOnly="True"/>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Margin="0,4,0,-16" VerticalAlignment="Bottom">
-                    <TextBox x:Name="ctlPrintText" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="840" HorizontalAlignment="Left" BorderThickness="1" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,1" />
-                    <ProgressBar x:Name="ctlProgressBar" Height="16" VerticalAlignment="Top" Width="840"/>
-                    <TextBox x:Name="ctlProgressText" Margin="0,-1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="840" HorizontalAlignment="Left" BorderThickness="0" IsEnabled="False" Text=" " />
-                </StackPanel>
-            </StackPanel>
-        </StackPanel>
+                        </Image>
+                    </Border>
+                    <RichTextBox Margin="0,4,0,0" Grid.Row="1" x:Name="ctlFrameText" IsReadOnly="True"/>
+                </Grid>
+            </Grid>
+            <TextBox Grid.Row="2" Margin="0, 2" x:Name="ctlPrintText" Height="72" TextWrapping="Wrap" BorderThickness="1" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
+            <ProgressBar Grid.Row="3" Margin="0, 2" Height="16" x:Name="ctlProgressBar"/>
+            <TextBox Grid.Row="4" Margin="0, 0, 0, -2" x:Name="ctlProgressText" TextWrapping="Wrap" BorderThickness="0" IsEnabled="False" Text=" " />
+        </Grid>
     </Grid>
 </Window>

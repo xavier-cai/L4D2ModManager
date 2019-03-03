@@ -4,10 +4,20 @@
                     xmlns:s="clr-namespace:System;assembly=mscorlib">
     <s:String x:Key="Label_MainCategory">Category</s:String>
     <s:String x:Key="Label_SubCategory">Subcategory</s:String>
+    <s:String x:Key="Label_Search">Search : </s:String>
+    <s:String x:Key="Label_Regex">Regexes</s:String>
+    <s:String x:Key="Label_ClassifyRule">Classify rules</s:String>
     <s:String x:Key="Col_ModId">ID</s:String>
     <s:String x:Key="Col_ModSource">Source</s:String>
     <s:String x:Key="Col_ModState">State</s:String>
     <s:String x:Key="Col_ModSize">Size</s:String>
+    <s:String x:Key="Col_CategoryName">Name</s:String>
+    <s:String x:Key="Col_CategoryDetectCollision">Detect conflict</s:String>
+    <s:String x:Key="Col_CategoryKeywords">Keywords</s:String>
+    <s:String x:Key="Col_RegexKey">Reference</s:String>
+    <s:String x:Key="Col_RegexPattern">Pattern</s:String>
+    <s:String x:Key="Col_RuleLogic">Logic</s:String>
+    <s:String x:Key="Col_RuleTarget">Category</s:String>
     <s:String x:Key="Menu_File">File(F)</s:String>
     <s:String x:Key="Menu_Edit">Edit(E)</s:String>
     <s:String x:Key="Menu_View">View(V)</s:String>
@@ -30,7 +40,7 @@
     <s:String x:Key="Menu_Language">Language</s:String>
     <s:String x:Key="Text_OK">OK</s:String>
     <s:String x:Key="Info_About">This is a free open-source software created by Xavier Cai</s:String>
-    <s:String x:Key="Info_ChangeLanguage">Language setting changes will take effect when you restart the software</s:String>
+    <s:String x:Key="Info_ChangeLanguage">The category information which is saved in [category.ini] will not be changed unless you delete it</s:String>
     <s:String x:Key="Info_FindPath">Find path</s:String>
     <s:String x:Key="Info_CheckPath">Please specific the game install path and ensure its validity</s:String>
     <s:String x:Key="Info_LoadStart">Start loading...</s:String>
@@ -44,7 +54,8 @@
     <s:String x:Key="Info_LoadSteamWorkshopFirstTime">The first time to load Steam workshop maybe cost a longer time</s:String>
     <s:String x:Key="Info_LoadLocalFile">Load local file</s:String>
     <s:String x:Key="Info_UpdateModState">Update MOD state</s:String>
-    <s:String x:Key="Info_ConfirmDelete" xml:space="preserve">The loacl file will be delete at the time.&#x0d;&#x0a;Continue?</s:String>
+    <s:String x:Key="Info_ConfirmDelete">Confirm?</s:String>
+    <s:String x:Key="Info_ConfirmDeleteFile" xml:space="preserve">The loacl file will be delete at the time.&#x0d;&#x0a;Continue?</s:String>
     <s:String x:Key="Info_NoCollision">No coflict</s:String>
     <s:String x:Key="Info_HaveCollision">Exist conflict</s:String>
     <s:String x:Key="Info_IgnoredCollision">Ignored collision</s:String>

@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BindingConverter\ListviewCategoryRowConverter.cs" />
     <Compile Include="BindingConverter\ListviewCollisionColorConverter.cs" />
     <Compile Include="BindingConverter\ListviewTooltipConverter.cs" />
     <Compile Include="CategorySelecter.cs" />
@@ -244,8 +245,17 @@
     <Compile Include="ViewItem.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="WindowCallbacks.cs" />
+    <Compile Include="WindowCategory.xaml.cs">
+      <DependentUpon>WindowCategory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowClassify.xaml.cs">
+      <DependentUpon>WindowClassify.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowColors.xaml.cs">
       <DependentUpon>WindowColors.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowLanguage.xaml.cs">
+      <DependentUpon>WindowLanguage.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowSetValue.xaml.cs">
       <DependentUpon>WindowSetValue.xaml</DependentUpon>
@@ -271,7 +281,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="WindowCategory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowClassify.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowColors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowLanguage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

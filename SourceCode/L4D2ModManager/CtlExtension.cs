@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Text;
+﻿using System.Text;
+using System.Windows;
 
 namespace L4D2ModManager
 {
@@ -7,6 +7,8 @@ namespace L4D2ModManager
     {
         public static bool IsNumber(this string str)
         {
+            if (str == null || str.Length <= 0)
+                return false;
             foreach (var c in str)
                 if (c < '0' || c > '9')
                     return false;

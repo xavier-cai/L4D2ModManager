@@ -1,3 +1,11 @@
+version 1.0.2
+-rewrite code of category by using class instead enum
+-complete the function of classify MOD by VPK file
+-add search box
+-add custom contends include custom category & cusom classify
+-rewrite UI framework to help adapting window size and placing controls
+-fix some logical bugs
+
 version 1.0.1
 -read cache image file
 -do dispose to release image resource

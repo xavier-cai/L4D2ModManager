@@ -17,7 +17,25 @@ namespace L4D2ModManager
         public List<KeyValuePair<string, string>> Values { get; private set; }
         private Encoding m_encoding;
 
+        public L4D2TxtReader(string file, TxtType type)
+        {
+            using (var fs = new FileStream(file, FileMode.Open))
+            {
+                Run(fs, type);
+            }
+        }
+
         public L4D2TxtReader(Stream stream, TxtType type)
+        {
+            Run(stream, type);
+        }
+
+        private L4D2TxtReader()
+        {
+            Values = new List<KeyValuePair<string, string>>();
+        }
+
+        private void Run(Stream stream, TxtType type)
         {
             Values = new List<KeyValuePair<string, string>>();
             switch (type)
@@ -25,11 +43,6 @@ namespace L4D2ModManager
                 case TxtType.AddonInfo: LoadAddonInfo(stream); break;
                 case TxtType.AddonList: LoadAddonList(stream); break;
             }
-        }
-
-        public L4D2TxtReader()
-        {
-            Values = new List<KeyValuePair<string, string>>();
         }
 
         private Encoding DetectEncoding(Stream stream)
@@ -158,9 +171,9 @@ namespace L4D2ModManager
 
         private void AddValue(string key, string value)
         {
-            int i = value.IndexOf("//");
-            if (i != -1)
-                value = value.Substring(0, i);
+            //int i = value.IndexOf("//");
+            //if (i != -1)
+            //    value = value.Substring(0, i);
             Values.Add(new KeyValuePair<string, string>(key, value));
             //Logging.Log(key + " : " + value, "DEBUG");
         }

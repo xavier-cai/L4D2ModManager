@@ -14,8 +14,7 @@ namespace L4D2ModManager
         public string FileName { get; private set; }
         public long FileSize { get; private set; }
         public ulong PublishedId { get; private set; }
-        public ModCategory[] Category { get { return m_category.Keys.ToArray(); } }
-        public object[] SubCategory(ModCategory c) { return m_category[c].Keys.ToArray(); }
+        public HashSet<L4D2Type.Category> Category { get { return m_category; } }
         public Image Image { get; private set; }
         public MemoryStream ImageMemoryStream { get; private set; }
         public string Title { get; private set; }
@@ -24,8 +23,8 @@ namespace L4D2ModManager
         public string[] Tags { get; private set; }
         public string ImageURL { get; private set; }
 
-        private Dictionary<ModCategory, CSSTL.Set<object>> m_category;
-        static private Dictionary<string, KeyValuePair<ModCategory, object>> FastCategoryMatchMap = new Dictionary<string, KeyValuePair<ModCategory, object>>();
+        private HashSet<L4D2Type.Category> m_category;
+        static public Dictionary<string, L4D2Type.Category> FastCategoryMatchMap = new Dictionary<string, L4D2Type.Category>();
         private List<KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>> m_responces;
 
         public MemoryStream GetAndResetImageMemoryStream()
@@ -39,7 +38,7 @@ namespace L4D2ModManager
             FileName = "";
             FileSize = 0;
             PublishedId = 0;
-            m_category = new Dictionary<ModCategory, CSSTL.Set<object>>();
+            m_category = new HashSet<L4D2Type.Category>();
             ImageMemoryStream = null;
             Image = null;
             Title = "";
@@ -130,58 +129,21 @@ namespace L4D2ModManager
         {
             if(Tags != null && Tags.Length > 0)
             {
-                Action<KeyValuePair<ModCategory, object>> AddCategory = (ret) =>
-                {
-                    if (!m_category.ContainsKey(ret.Key))
-                        m_category.Add(ret.Key, new CSSTL.Set<object>());
-                    if (ret.Value != null)
-                        m_category[ret.Key].TryAdd(ret.Value);
-                };
-                Action<string, ModCategory, object> AddCategoryAndStore = (tag, category, o) =>
-                {
-                    var result = new KeyValuePair<ModCategory, object>(category, o);
-                    FastCategoryMatchMap.Add(tag, result);
-                    AddCategory(result);
-                };
                 foreach (var v in Tags)
                 {
                     var tag = v.ToLower();
                     if (FastCategoryMatchMap.ContainsKey(tag))
                     {
-                        AddCategory(FastCategoryMatchMap[tag]);
+                        if(FastCategoryMatchMap[tag] != null)
+                            Category.Add(FastCategoryMatchMap[tag]);
                     }
                     else
                     {
-                        foreach(var e in Enum.GetValues(typeof(ModCategory)))
-                        {
-                            var array = L4D2Type.GetSubcategory((ModCategory)e);
-                            if(array != null)
-                            {
-                                foreach(var o in array)
-                                {
-                                    if(tag.Equals(o.ToString().ToLower()))
-                                    {
-                                        AddCategoryAndStore(tag, (ModCategory)e, o);
-                                        goto a_nextTag;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if(tag.Equals(e.ToString().ToLower()))
-                                {
-                                    AddCategoryAndStore(tag, (ModCategory)e, null);
-                                    goto a_nextTag;
-                                }
-                            }
-                        }
-                        //can not find... give some special rules here
-                        if(tag == "common infected")
-                            AddCategoryAndStore(tag, ModCategory.Infected, InfectedCategory.Common);
-                        else if(tag == "special infected")
-                            AddCategoryAndStore(tag, ModCategory.Infected, null);
+                        var match = L4D2Type.Match(v);
+                        if(match != null)
+                            Category.Add(match);
+                        FastCategoryMatchMap.Add(v, match);
                     }
-                    a_nextTag:;
                 }
             }
         }
@@ -240,6 +202,45 @@ namespace L4D2ModManager
                         }
                     }
                 }
+
+                var regexHandle = new L4D2Type.RegexClassifierHandle();
+                foreach (var directory in vpk.Directories)
+                {
+                    if (directory.Path.Length > 0)
+                    {
+                        foreach(var entry in directory.Entries)
+                        {
+                            var name = directory.Path + '/' + entry.Filename + '.' + entry.Extension;
+                            regexHandle.HandleRegex(name);
+                            if (regexHandle.Completed)
+                                goto RegexEnd;
+                        }
+                    }
+                }
+                RegexEnd:
+                try
+                {
+                    var regexResults = regexHandle.Match();
+                    foreach (var v in regexResults)
+                    {
+                        if (FastCategoryMatchMap.ContainsKey(v))
+                        {
+                            if (FastCategoryMatchMap[v] != null)
+                                Category.Add(FastCategoryMatchMap[v]);
+                        }
+                        else
+                        {
+                            var match = L4D2Type.Match(v);
+                            if (match != null)
+                                Category.Add(match);
+                            FastCategoryMatchMap.Add(v, match);
+                        }
+                    }
+                }
+                catch (L4D2Type.SyntaxError e)
+                {
+                    Logging.Log(e.Message, "Syntax Error");
+                }
             }
         }
 
@@ -282,11 +283,22 @@ namespace L4D2ModManager
 
         static void HandleAddonInfoTxt(L4D2Mod o, SharpVPK.VpkEntry entry)
         {
+            bool AddDescription = o.Description.Length <= 0;
             MemoryStream ms = new MemoryStream();
             byte[] data = entry.Data;
             ms.Write(data, 0, data.Length);
             ms.Seek(0, SeekOrigin.Begin);
             L4D2TxtReader reader = new L4D2TxtReader(ms, L4D2TxtReader.TxtType.AddonInfo);
+            foreach(var item in reader.Values)
+            {
+                var key = item.Key.ToLower();
+                if (key.Contains("title") && o.Title.Length <= 0)
+                    o.Title = item.Value;
+                else if (key.Contains("author") && o.Author.Length <= 0)
+                    o.Author = item.Value;
+                else if (key.Contains("description") && AddDescription)
+                    o.Description = o.Description + item.Value + "\r\n";
+            }
         }
 
         static void HandleProps(L4D2Mod o, SharpVPK.VpkDirectory dir)

@@ -8,10 +8,17 @@ namespace L4D2ModManager
     {
         public abstract class ResourceHandler
         {
+            public bool Registed { get; private set; } = false;
             Dictionary<ResourceItem, bool> m_resources = new Dictionary<ResourceItem, bool>();
             public Dictionary<ResourceItem, bool> Resources { get { return m_resources; } }
             public int CollisionCount { get; set; }
             public Action<int> CollisionCountChangeHandler = null;
+
+            protected void ClearResource()
+            {
+                Unregist();
+                m_resources.Clear();
+            }
 
             protected void AddResource(ResourceItem item)
             {
@@ -19,15 +26,25 @@ namespace L4D2ModManager
                     m_resources.Add(item, false);
             }
 
+            /*
             protected void Regist()
             {
+                Regist(item => true);
+            }
+            */
+
+            protected void Regist(Predicate<ResourceItem> predicate)
+            {
+                Registed = true;
                 var keys = Resources.Keys.ToArray();
                 foreach (var v in keys)
-                    v.Regist(this);
+                    if(predicate(v))
+                        v.Regist(this);
             }
 
             protected void Unregist()
             {
+                Registed = false;
                 var keys = Resources.Keys.ToArray();
                 foreach (var v in keys)
                     v.Unregist(this);
@@ -61,9 +78,9 @@ namespace L4D2ModManager
 
         public class ResourceItem
         {
-            public string Identity { private set; get; }
+            public object Identity { private set; get; }
             public string Display { private set; get; }
-            public ResourceItem(string identity, string display)
+            public ResourceItem(object identity, string display)
             {
                 Identity = identity;
                 Display = display;
@@ -95,22 +112,20 @@ namespace L4D2ModManager
             }
         }
 
-        Dictionary<string, ResourceItem> Storager;
+        Dictionary<object, ResourceItem> Storager;
 
         static private L4D2Resource Instance = new L4D2Resource();
         private L4D2Resource()
         {
-            Storager = new Dictionary<string, ResourceItem>();
+            Storager = new Dictionary<object, ResourceItem>();
         }
 
-        static public ResourceItem GetResource(ModCategory category, object subcategory)
+        static public ResourceItem GetResource(L4D2Type.Category category)
         {
-            string id = category.GetString() + subcategory.GetString();
-            if (Instance.Storager.ContainsKey(id))
-                return Instance.Storager[id];
-            string display = category.GetString() + '.' + subcategory.GetString();
-            var item = new ResourceItem(id, display);
-            Instance.Storager.Add(id, item);
+            if (Instance.Storager.ContainsKey(category))
+                return Instance.Storager[category];
+            var item = new ResourceItem(category, category.ToString());
+            Instance.Storager.Add(category, item);
             return item;
         }
 

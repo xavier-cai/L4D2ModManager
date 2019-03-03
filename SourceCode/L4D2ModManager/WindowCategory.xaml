@@ -1,0 +1,65 @@
+﻿<Window x:Class="L4D2ModManager.WindowCategory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:L4D2ModManager"
+        mc:Ignorable="d"
+        Title="WindowCategory" MinHeight="450" MinWidth="450" Height="450" Width="450" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <local:ListviewCategoryRowConverter x:Key="ListviewCategoryRowStyleConverter"/>
+        <Style x:Key="ListviewCategoryRowStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="FontWeight">
+                <Setter.Value>
+                    <Binding RelativeSource="{RelativeSource Self}" Converter="{StaticResource ListviewCategoryRowStyleConverter}"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <ListView Name="ctlListView" ItemContainerStyle="{StaticResource ListviewCategoryRowStyle}" MouseRightButtonUp="ListViewMouseRightButtonUp" Foreground="Black">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="100" Header="{DynamicResource Col_CategoryName}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="   " />
+                                    <TextBox Grid.Column="1" Text="{Binding Name}" MaxLines="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50" Header="{DynamicResource Col_CategoryDetectCollision}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Center">
+                                    <CheckBox IsChecked="{Binding Detect}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250" Header="{DynamicResource Col_CategoryKeywords}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding Keywords}" MaxLines="1"/>
+                                    <Button Grid.Column="1" FontWeight="Normal" Padding="3, 0" Margin="3, 0" Content="…" Click="OnButtonMenuClick"/>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

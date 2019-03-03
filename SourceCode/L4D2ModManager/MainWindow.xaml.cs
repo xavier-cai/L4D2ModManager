@@ -25,10 +25,11 @@ namespace L4D2ModManager
         {
             InitializeComponent();
             this.FontSize = Configure.View.FontSize;
+            this.SetSize(Configure.View.WindowSize);
 
             //new
             m_manager = new L4D2MM();
-            m_categorySelected = new CategorySelecter(ctlCategoryList, ctlSubcategoryList, ctlListView);
+            m_categorySelected = new CategorySelecter(ctlCategoryList, ctlSubcategoryList, ctlTextSearch, ctlListView);
 
             //initialize property
             ctlPrintText.AppendText(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + " [version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version + ']');
@@ -77,9 +78,8 @@ namespace L4D2ModManager
         {
             this.Dispatcher.Invoke(() =>
             {
-                if (obj is L4D2MM.ModInfo)
-                    if (key == m_displayedKey)
-                        LoadModInfo(obj as L4D2MM.ModInfo);
+                if (obj is L4D2MM.ModInfo && key == m_displayedKey)
+                    LoadModInfo(obj as L4D2MM.ModInfo);
             }
             , System.Windows.Threading.DispatcherPriority.Background);
         }
@@ -99,8 +99,10 @@ namespace L4D2ModManager
             WindowCallbacks.SetPrintCallback(PrintOperation);
             WindowCallbacks.SetOperationEnableCallback(EnableOperation);
             WindowCallbacks.SetNotifyUpdateCallback(NotifyUpdate);
-
+#if DEBUG
+#else
             LoadModManager();
+#endif
         }
 
         private void Exit()
@@ -108,6 +110,7 @@ namespace L4D2ModManager
             Configure.SaveConfigure();
             m_manager.SaveIgnoreList();
             m_manager.SaveModState();
+            L4D2Type.CustomContentInstance.SaveCustomContent();
             Logging.Log("good bye & see u");
             System.Environment.Exit(0);
         }
@@ -121,26 +124,32 @@ namespace L4D2ModManager
         {
             new Thread(new ThreadStart(() =>
             {
-            if (!m_manager.LoadConfig())
-            {
-                WindowCallbacks.Print(StringAdapter.GetInfo("CheckPath"));
-                return;
-            }
-            if (!m_manager.SetEnableSteam(Configure.EnableSteam))
-            {
-                WindowCallbacks.Print(StringAdapter.GetInfo("NeedSteam"));
-                return;
-            }
-            WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
-            m_manager.Initialize();
-            Logging.Log("mod manager initialize success");
-            m_categorySelected.Update(m_manager);
-            WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
+                WindowCallbacks.OperationEnable(this.GetType().ToString(), false);
+                if (!m_manager.LoadConfig())
+                {
+                    WindowCallbacks.Print(StringAdapter.GetInfo("CheckPath"));
+                    WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
+                    return;
+                }
+                if (!m_manager.SetEnableSteam(Configure.EnableSteam))
+                {
+                    WindowCallbacks.Print(StringAdapter.GetInfo("NeedSteam"));
+                    WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
+                    return;
+                }
+                m_manager.Initialize();
+                Logging.Log("mod manager initialize success");
+                m_categorySelected.Update(m_manager);
+                WindowCallbacks.OperationEnable(this.GetType().ToString(), true);
             })).Start();
         }
 
+        private L4D2MM.ModInfo LoadedModInfo = null;
         private void LoadModInfo(L4D2MM.ModInfo mod)
         {
+            if (mod == null)
+                return;
+            LoadedModInfo = mod;
             var fontSize = this.FontSize;
             m_displayedKey = mod.Key;
             ctlFrameText.Document.Blocks.Clear();
@@ -160,7 +169,15 @@ namespace L4D2ModManager
             if (mod.Mod.Author.Length > 0)
             {
                 Run run = new Run(StringAdapter.GetResource("Author") + " : " + mod.Mod.Author);
-                run.FontSize = fontSize - 2;
+                run.FontSize = fontSize;
+                run.Foreground = new SolidColorBrush(Colors.Gray);
+                run.FontWeight = FontWeights.Normal;
+                ctlFrameText.Document.Blocks.Add(new Paragraph(run));
+            }
+            if(mod.Mod.Category.Count > 0)
+            {
+                Run run = new Run(StringAdapter.GetResource("Category") + " : " + mod.Mod.Category.Aggregate("", (s, c) => s += ", " + c.ToString()).Substring(2));
+                run.FontSize = fontSize;
                 run.Foreground = new SolidColorBrush(Colors.Gray);
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
@@ -168,7 +185,7 @@ namespace L4D2ModManager
             if (mod.Mod.Tags != null && mod.Mod.Tags.Length > 0)
             {
                 Run run = new Run(StringAdapter.GetResource("Tag") + " : \r\n" + mod.Mod.Tags.Aggregate((a, b) => a + ", " + b).ToString());
-                run.FontSize = fontSize - 2;
+                run.FontSize = fontSize;
                 run.Foreground = new SolidColorBrush(Colors.Black);
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
@@ -217,6 +234,38 @@ namespace L4D2ModManager
                 UpdateEnable("Unsubscribe", mod.CanUnsubscribe);
                 UpdateEnable("Ignore_Collision", !mod.IsIgnoreCollision);
                 UpdateEnable("Detect_Collision", mod.IsIgnoreCollision);
+            }
+        }
+
+        int SortMethodId = 1;
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
+        {
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            if (headerClicked != null && headerClicked.Role != GridViewColumnHeaderRole.Padding)
+            {
+                Comparison<ViewItem> method = null;
+                if (headerClicked.Content.Equals(StringAdapter.GetResource("Col_ModId")))
+                    method = (a, b) => a.ID.CompareTo(b.ID);
+                else if (headerClicked.Content.Equals(StringAdapter.GetResource("Col_ModSource")))
+                    method = (a, b) => a.Source.CompareTo(b.Source);
+                else if (headerClicked.Content.Equals(StringAdapter.GetResource("Col_ModState")))
+                    method = (a, b) => a.State.CompareTo(b.State);
+                else if (headerClicked.Content.Equals(StringAdapter.GetResource("Col_ModSize")))
+                    method = (a, b) => a.Mod.Mod.FileSize.CompareTo(b.Mod.Mod.FileSize);
+                else
+                    return;
+
+                if (method == null)
+                    return;
+                else
+                {
+                    if (SortMethodId.Equals(0))
+                        m_categorySelected.Sort(null);
+                    else
+                        m_categorySelected.Sort((a, b) => SortMethodId * method(a, b));
+                }
+                SortMethodId += 1;
+                if (SortMethodId > 1) SortMethodId = -1;
             }
         }
 
@@ -285,7 +334,7 @@ namespace L4D2ModManager
             menu.Items.Add(GenerateMenuItemWithoutConfirm("Ignore_Collision", o => { return o.IgnoreCollision(); }));
             menu.Items.Add(GenerateMenuItemWithoutConfirm("Detect_Collision", o => { return o.DetectCollision(); }));
             menu.Items.Add(new Separator());
-            menu.Items.Add(GenerateMenuItem("Delete", ()=> { return CtlExtension.ConfirmBox(StringAdapter.GetInfo("ConfirmDelete")); }, o => { bool ret = o.Delete(); m_categorySelected.Update(m_manager); return ret; }));
+            menu.Items.Add(GenerateMenuItem("Delete", () => { return CtlExtension.ConfirmBox(StringAdapter.GetInfo("ConfirmDeleteFile")); }, o => { bool ret = o.Delete(); m_categorySelected.Update(m_manager); return ret; }));
 
             ctlListView.ContextMenu = menu;
 
@@ -356,12 +405,24 @@ namespace L4D2ModManager
 
         private void MenuItemCustomCategoryClick(object sender, RoutedEventArgs e)
         {
-            Exit();
+            var window = new WindowCategory();
+            window.Title = StringAdapter.GetResource("Menu_CustomCategory");
+            window.FontSize = FontSize;
+            window.Owner = this;
+            window.ShowDialog();
+            m_categorySelected.Refresh();
+            LoadModInfo(LoadedModInfo);
+            foreach (var mod in m_manager.Mods.Values)
+                mod.RefreshResources();
         }
 
         private void MenuItemLocalModClassifyRuleClick(object sender, RoutedEventArgs e)
         {
-            Exit();
+            var window = new WindowClassify();
+            window.Title = StringAdapter.GetResource("Menu_LocalModClassifyRule");
+            window.FontSize = FontSize;
+            window.Owner = this;
+            window.ShowDialog();
         }
 
         private void MenuItemFontSizeClick(object sender, RoutedEventArgs e)
@@ -375,17 +436,7 @@ namespace L4D2ModManager
             window.FontSize = FontSize;
             window.ShowDialog();
             if (window.InputValue != null)
-            {
                 FontSize = (double)window.InputValue;
-                if(FontSize != oldFontSize)
-                {
-                    Configure.View.FontSize = FontSize;
-                    //refresh after new font size work!
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                         AdaptWindowSize(new Size(this.Width, this.Height)))
-                        , System.Windows.Threading.DispatcherPriority.Background);
-                }
-            }
         }
 
         private void MenuItemColorsClick(object sender, RoutedEventArgs e)
@@ -395,11 +446,6 @@ namespace L4D2ModManager
             //window.FontSize = FontSize;
             window.ShowDialog();
             ctlListView.Items.Refresh();
-        }
-
-        private void MenuItemCollisionContentViewClick(object sender, RoutedEventArgs e)
-        {
-            Exit();
         }
 
         private void MenuItemModSourceClick(object sender, RoutedEventArgs e)
@@ -413,6 +459,18 @@ namespace L4D2ModManager
             }
         }
 
+        private void MenuItemEnableSteamClick(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            Configure.EnableSteam = item.IsChecked;
+        }
+
+        private void MenuItemEnableVpkClick(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            Configure.EnableReadVpk = item.IsChecked;
+        }
+
         private void MenuItemLanguageClick(object sender, RoutedEventArgs e)
         {
             var newlanguage = (sender as MenuItem).DataContext as string;
@@ -420,7 +478,7 @@ namespace L4D2ModManager
             {
                 LanguageHelper.LoadLanguageFile(newlanguage);
                 Configure.Language = newlanguage;
-                //WindowCallbacks.Print(StringAdapter.GetInfo("ChangeLanguage"));
+                WindowCallbacks.Print(StringAdapter.GetInfo("ChangeLanguage"));
                 m_categorySelected.RefreshLanguage();
                 InitializeListViewMenu();
                 Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(newlanguage);
@@ -452,28 +510,18 @@ namespace L4D2ModManager
 
         private void AdaptWindowSize(Size size)
         {
-            double referHeight = ctlProgressText.ActualHeight;
-            double totalHeight = size.Height;
-            double totalWidth = size.Width - 20;
-            double printBoxHeightFactor = 0.12;
-            double contentDivideFactor = 0.354;
-            double imageFactor = 36.0 / 64.0;
-            double contentHeight = totalHeight - ctlMenu.ActualHeight - referHeight - printBoxHeightFactor * totalHeight - ctlProgressBar.ActualHeight - ctlProgressText.ActualHeight - 73;
-            double imageWidth = Math.Min(500, (totalWidth - 4) * contentDivideFactor);
-            double imageHeight = imageFactor * imageWidth;
-            ctlCategoryList.SetSize(Math.Max(140, 14.0 / 84 * totalWidth), referHeight + 5);
-            ctlSubcategoryList.SetSize(ctlCategoryList.Width, ctlCategoryList.Height);
-            ctlListView.SetSize(totalWidth - 4 - imageWidth, contentHeight);
+            double imageWidth = Math.Min(500, size.Width * 0.36);
+            double imageHeight = 36.0 / 64.0 * imageWidth;
             ctlImage.SetSize(imageWidth, imageHeight);
-            ctlFrameText.SetSize(imageWidth, contentHeight - imageHeight - 4 - 2);
-            ctlPrintText.SetSize(totalWidth, printBoxHeightFactor * totalHeight);
-            ctlProgressBar.Width = totalWidth;
-            ctlProgressText.Width = totalWidth;
+            ctlFrameText.Width = imageWidth;
+            ctlPrintText.Height = size.Height * 0.13;
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e)
         {
             AdaptWindowSize(e.NewSize);
+            Configure.View.WindowSize.Width = e.NewSize.Width;
+            Configure.View.WindowSize.Height = e.NewSize.Height;
         }
     }
 }

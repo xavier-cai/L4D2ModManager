@@ -97,10 +97,10 @@ namespace L4D2ModManager
             private void OnClick(object sender, RoutedEventArgs e)
             {
                 var colorDialog = new System.Windows.Forms.ColorDialog();
+                colorDialog.Color = System.Drawing.Color.FromArgb(Color.A, Color.R, Color.G, Color.B);
                 colorDialog.AllowFullOpen = true;
                 colorDialog.FullOpen = true;
                 colorDialog.ShowHelp = true;
-                colorDialog.Color = System.Drawing.Color.White;
                 if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     var oriColor = colorDialog.Color;
