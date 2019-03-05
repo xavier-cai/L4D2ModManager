@@ -100,6 +100,7 @@
     <s:String x:Key="Indicator">冲突指示器</s:String>
     <s:String x:Key="Invalid_Value">无效的取值</s:String>
     <s:String x:Key="License">许可协议</s:String>
+    <s:String x:Key="No_Information">没有信息</s:String>
     <s:String x:Key="Normal">正常</s:String>
     <s:String x:Key="Off">停用</s:String>
     <s:String x:Key="On">启用</s:String>
@@ -111,6 +112,7 @@
     <s:String x:Key="Subscribe">订阅</s:String>
     <s:String x:Key="Success">成功</s:String>
     <s:String x:Key="Tag">标签</s:String>
+    <s:String x:Key="Tags">标签</s:String>
     <s:String x:Key="Uncategorized">未分类</s:String>
     <s:String x:Key="Unsubscribe">取消订阅</s:String>
     <s:String x:Key="Value">值</s:String>

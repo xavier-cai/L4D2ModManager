@@ -121,7 +121,7 @@
                     </Grid>
                     <ListView Grid.Row="1" x:Name="ctlListView" HorizontalContentAlignment="Center" ItemContainerStyle="{StaticResource ListViewItemStyle}" SelectionChanged="ListViewSelectionChanged" Foreground="Black" MouseRightButtonUp="ListViewMouseRightButtonUp" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" >
                         <ListView.View>
-                            <GridView>
+                            <GridView x:Name="ctlGridView">
                                 <GridViewColumn Width="230" Header="{DynamicResource Col_ModId}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

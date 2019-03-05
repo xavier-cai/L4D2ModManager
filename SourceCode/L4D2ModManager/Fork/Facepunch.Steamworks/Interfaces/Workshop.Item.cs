@@ -25,6 +25,7 @@ namespace Facepunch.Steamworks
             public DateTime Modified { get; private set; }
             public DateTime Created { get; private set; }
             public int FileSize { get; private set; }
+            public string URL { get; private set; }
 
             public Item( ulong Id, Workshop workshop )
             {
@@ -46,6 +47,7 @@ namespace Facepunch.Steamworks
                 item.Modified = Utility.Epoch.ToDateTime( details.TimeUpdated );
                 item.Created = Utility.Epoch.ToDateTime( details.TimeCreated );
                 item.FileSize = details.FileSize;
+                item.URL = details.URL;
 
                 return item;
             }

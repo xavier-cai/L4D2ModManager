@@ -115,8 +115,8 @@ namespace L4D2ModManager
                     var item = v as CategoryItem;
                     if(item != null)
                     {
-                        item.Category.Parent.RemoveChild(item.Category);
                         Logging.Log("Remove category : " + item.Category.ToString());
+                        item.Category.Parent.RemoveChild(item.Category);
                     }
                 }
                 LoadCategoryItem();

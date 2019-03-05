@@ -22,6 +22,10 @@ namespace L4D2ModManager
         public string Description { get; private set; }
         public string[] Tags { get; private set; }
         public string ImageURL { get; private set; }
+        public string Version { get; private set; }
+        public string URL { get; private set; }
+        public ulong OwnerId { get; private set; }
+        public float Score { get; private set; }
 
         private HashSet<L4D2Type.Category> m_category;
         static public Dictionary<string, L4D2Type.Category> FastCategoryMatchMap = new Dictionary<string, L4D2Type.Category>();
@@ -45,6 +49,10 @@ namespace L4D2ModManager
             Author = "";
             Description = "";
             ImageURL = "";
+            Version = "";
+            URL = "";
+            OwnerId = 0;
+            Score = -1;
         }
 
         public void Dispose()
@@ -204,6 +212,9 @@ namespace L4D2ModManager
                 }
 
                 var regexHandle = new L4D2Type.RegexClassifierHandle();
+                //regexHandle.HandleRegex(FileName);
+                regexHandle.HandleRegex("<title>" + Title);
+                regexHandle.HandleRegex("<author>" + Author);
                 foreach (var directory in vpk.Directories)
                 {
                     if (directory.Path.Length > 0)
@@ -257,7 +268,6 @@ namespace L4D2ModManager
 
         static void HandleRoot(L4D2Mod o, SharpVPK.VpkDirectory dir)
         {
-
             bool isFindImage = o.ImageMemoryStream != null;
             foreach (var entry in dir.Entries)
             {
@@ -293,11 +303,20 @@ namespace L4D2ModManager
             {
                 var key = item.Key.ToLower();
                 if (key.Contains("title") && o.Title.Length <= 0)
-                    o.Title = item.Value;
+                    o.Title = item.Value.Replace('\r', ' ').Replace('\n', ' ');
                 else if (key.Contains("author") && o.Author.Length <= 0)
                     o.Author = item.Value;
                 else if (key.Contains("description") && AddDescription)
                     o.Description = o.Description + item.Value + "\r\n";
+                else if (key.Contains("version") && o.Version.Length <= 0)
+                    o.Version = item.Value;
+                else if (key.Contains("url") && o.URL.Length <= 0)
+                    o.URL = item.Value;
+                else if (key.Contains("ownerid") && o.OwnerId <= 0)
+                {
+                    try { o.OwnerId = Convert.ToUInt64(item.Value); }
+                    catch { }
+                }
             }
         }
 

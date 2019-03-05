@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Windows;
+using System.Linq;
 
 namespace L4D2ModManager
 {
@@ -76,6 +77,29 @@ namespace L4D2ModManager
             char[] decode = new char[length];
             int did = to.GetDecoder().GetChars(bytes, 0, bytes.Length, decode, 0);
             return string.Concat(decode);
+        }
+
+        public static string Display<T>(this System.Collections.Generic.IEnumerable<T> o)
+        {
+            if (o.Count() <= 0)
+                return "";
+            return o.Aggregate(" ", (a, b)=>a+", "+b).Substring(2);
+        }
+
+        public static string Display(this object o)
+        {
+            if (o is null)
+                return "";
+            if (o is string)
+                return o as string;
+            if (o is System.Collections.IEnumerable)
+            {
+                var array = (o as System.Collections.IEnumerable).Cast<object>();
+                if (array.Count() <= 0)
+                    return "";
+                return array.Aggregate(" ", (a, b) => a + ", " + b).Substring(2);
+            }
+            return o.ToString();
         }
     }
 }

@@ -1,3 +1,11 @@
+version 1.0.3
+-custom view list and content frame by configure file
+-add title and author to regex match targets
+-fix bug: menu part dont take care about font size setting
+-fix bug: can not delete a subcategory
+-fix bug: font size is not be saved
+-fix bug: missing information when reading file addoninfo.txt in VPK
+
 version 1.0.2
 -rewrite code of category by using class instead enum
 -complete the function of classify MOD by VPK file

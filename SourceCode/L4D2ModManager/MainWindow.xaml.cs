@@ -21,11 +21,47 @@ namespace L4D2ModManager
         private CategorySelecter m_categorySelected = null;
         //private bool m_enable = true;
 
+        private Dictionary<string, bool> ReflectionCache = new Dictionary<string, bool>();
+        private bool CheckModInfoReflection(string reflection)
+        {
+            if (reflection == null || reflection == "")
+                return false;
+            if (ReflectionCache.ContainsKey(reflection))
+                return ReflectionCache[reflection];
+            var ret = typeof(L4D2Mod).GetMembers().FirstOrDefault(member => member.Name.Equals(reflection) && ((member.MemberType & (System.Reflection.MemberTypes.Property)) != 0)) != null;
+            ReflectionCache.Add(reflection, ret);
+            Logging.Log("Reflection check for [" + reflection + "] is " + ret.ToString());
+            return ret;
+        }
+
+        private Dictionary<GridViewColumn, string> SortReflectionMap = new Dictionary<GridViewColumn, string>(); 
         public MainWindow()
         {
             InitializeComponent();
+
+            //UI
             this.FontSize = Configure.View.FontSize;
+            ctlMenu.FontSize = Configure.View.FontSize;
             this.SetSize(Configure.View.WindowSize);
+
+            foreach (var col in CustomInformation.Instance.ViewLists)
+            {
+                if (CheckModInfoReflection(col.Reflection))
+                {
+                    var textBlockFactory = new FrameworkElementFactory(typeof(TextBlock));
+                    textBlockFactory.SetValue(TextElement.ForegroundProperty, Brushes.Black);
+                    textBlockFactory.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("Mod") { Converter = new StringDisplayConverter(), ConverterParameter = "Mod." + col.Reflection });
+                    textBlockFactory.SetValue(TextBlock.TextAlignmentProperty, col.TextAlignment);
+
+                    GridViewColumn column = new GridViewColumn();
+                    column.Header = col.TryTranslate ? StringAdapter.GetResource(col.Header) : col.Header;
+                    column.Width = col.Width;
+                    column.CellTemplate = new DataTemplate { VisualTree = textBlockFactory };
+                    ctlGridView.Columns.Add(column);
+
+                    SortReflectionMap.Add(column, col.Reflection);
+                }
+            }
 
             //new
             m_manager = new L4D2MM();
@@ -111,6 +147,7 @@ namespace L4D2ModManager
             m_manager.SaveIgnoreList();
             m_manager.SaveModState();
             L4D2Type.CustomContentInstance.SaveCustomContent();
+            CustomInformation.Instance.Save();
             Logging.Log("good bye & see u");
             System.Environment.Exit(0);
         }
@@ -166,14 +203,6 @@ namespace L4D2ModManager
                 run.FontWeight = FontWeights.Bold;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
             }
-            if (mod.Mod.Author.Length > 0)
-            {
-                Run run = new Run(StringAdapter.GetResource("Author") + " : " + mod.Mod.Author);
-                run.FontSize = fontSize;
-                run.Foreground = new SolidColorBrush(Colors.Gray);
-                run.FontWeight = FontWeights.Normal;
-                ctlFrameText.Document.Blocks.Add(new Paragraph(run));
-            }
             if(mod.Mod.Category.Count > 0)
             {
                 Run run = new Run(StringAdapter.GetResource("Category") + " : " + mod.Mod.Category.Aggregate("", (s, c) => s += ", " + c.ToString()).Substring(2));
@@ -182,19 +211,29 @@ namespace L4D2ModManager
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
             }
-            if (mod.Mod.Tags != null && mod.Mod.Tags.Length > 0)
+
+            foreach (var box in CustomInformation.Instance.ViewBoxes)
             {
-                Run run = new Run(StringAdapter.GetResource("Tag") + " : \r\n" + mod.Mod.Tags.Aggregate((a, b) => a + ", " + b).ToString());
-                run.FontSize = fontSize;
-                run.Foreground = new SolidColorBrush(Colors.Black);
-                run.FontWeight = FontWeights.Normal;
-                ctlFrameText.Document.Blocks.Add(new Paragraph(run));
+                if (CheckModInfoReflection(box.Reflection))
+                {
+                    string content = (box.TryTranslate ? StringAdapter.GetResource(box.Header) : box.Header) + " : \r\n";
+                    string reflection = typeof(L4D2Mod).InvokeMember(box.Reflection, System.Reflection.BindingFlags.GetProperty, null, mod.Mod, null).Display();
+                    if (reflection.Length > 0)
+                    {
+                        Run run = new Run(content + reflection);
+                        run.FontSize = fontSize;
+                        run.Foreground = new SolidColorBrush(box.Color);
+                        run.FontWeight = FontWeights.Normal;
+                        ctlFrameText.Document.Blocks.Add(new Paragraph(run));
+                    }
+                }
             }
-            if (mod.Mod.Description.Length > 0)
+
+            if (ctlFrameText.Document.Blocks.Count <= 0)
             {
-                Run run = new Run(StringAdapter.GetResource("Description") + " : \r\n" + mod.Mod.Description);
+                Run run = new Run('(' + StringAdapter.GetResource("No_Information") + ')');
                 run.FontSize = fontSize;
-                run.Foreground = new SolidColorBrush(Colors.Black);
+                run.Foreground = new SolidColorBrush(Colors.Gray);
                 run.FontWeight = FontWeights.Normal;
                 ctlFrameText.Document.Blocks.Add(new Paragraph(run));
             }
@@ -252,6 +291,16 @@ namespace L4D2ModManager
                     method = (a, b) => a.State.CompareTo(b.State);
                 else if (headerClicked.Content.Equals(StringAdapter.GetResource("Col_ModSize")))
                     method = (a, b) => a.Mod.Mod.FileSize.CompareTo(b.Mod.Mod.FileSize);
+                else if (SortReflectionMap.ContainsKey(headerClicked.Column))
+                    method = (a, b) =>
+                    {
+                        var reflection = SortReflectionMap[headerClicked.Column];
+                        var oa = typeof(L4D2Mod).InvokeMember(reflection, System.Reflection.BindingFlags.GetProperty, null, a.Mod.Mod, null);
+                        var ob = typeof(L4D2Mod).InvokeMember(reflection, System.Reflection.BindingFlags.GetProperty, null, b.Mod.Mod, null);
+                        if (oa is IComparable && ob is IComparable)
+                            return (oa as IComparable).CompareTo(ob);
+                        return oa.Display().CompareTo(ob.Display());
+                    };
                 else
                     return;
 
@@ -436,7 +485,11 @@ namespace L4D2ModManager
             window.FontSize = FontSize;
             window.ShowDialog();
             if (window.InputValue != null)
-                FontSize = (double)window.InputValue;
+            {
+                this.FontSize = (double)window.InputValue;
+                ctlMenu.FontSize = this.FontSize;
+                Configure.View.FontSize = this.FontSize;
+            }
         }
 
         private void MenuItemColorsClick(object sender, RoutedEventArgs e)

@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BindingConverter\StringDisplayConverter.cs" />
     <Compile Include="BindingConverter\ListviewCategoryRowConverter.cs" />
     <Compile Include="BindingConverter\ListviewCollisionColorConverter.cs" />
     <Compile Include="BindingConverter\ListviewTooltipConverter.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Configure.cs" />
     <Compile Include="CSSTL\Set.cs" />
     <Compile Include="CtlExtension.cs" />
+    <Compile Include="CustomInformation.cs" />
     <Compile Include="Fork\Facepunch.Steamworks\BaseSteamworks.cs" />
     <Compile Include="Fork\Facepunch.Steamworks\Callbacks\Index.cs" />
     <Compile Include="Fork\Facepunch.Steamworks\Client.cs" />

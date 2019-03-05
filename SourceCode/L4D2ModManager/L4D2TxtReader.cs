@@ -67,71 +67,98 @@ namespace L4D2ModManager
             //return System.Text.Encoding.Default;
         }
 
+        private static char[] LineEnd = new char[] { '\r', '\n' };
         public void LoadAddonInfo(Stream stream)
         {
             Values.Clear();
             m_encoding = DetectEncoding(stream);
 
-            char[] bounds = new char[] { '\r', '\n', '\t', ' ', '}' };
-            char last;
-
-            ReadUntill(stream, c => c == '{', out last);
-            if (last == '{')
+            string[] contents;
             {
-                while (stream.Position < stream.Length)
-                {
-                    ReadUntill(stream, c => !bounds.Contains(c), out last);
-                    string str = ReadUntill(stream, c => bounds.Contains(c), out last, last);
-
-                    if (last == char.MinValue || last == '}' || str.Length == 0 || !IsKey(str))
-                        break;
-
-                    ReadValueForKey(stream, str, bounds);
-                }
+                char last;
+                ReadUntill(stream, c => c == '{', out last);
+                if (last != '{')
+                    return;
+                var content = ReadUntill(stream, c => c == '}', out last);
+                if (last != '}')
+                    return;
+                contents = content.Split('\n');
             }
-        }
+            for (int i = 0; i < contents.Length - 1; i++)
+                contents[i] += '\n';
 
-        private bool IsKey(string str)
-        {
-            return str.ToLower().Contains("addon");
-        }
-
-        private void ReadValueForKey(Stream stream, string key, char[] bound)
-        {
-            char last;
-            string blank = ReadUntill(stream, c => !bound.Contains(c), out last);
-            if (last == '\"')
+            Func<string, string> RemoveSpaceAtFront = s =>
             {
-                string v = ReadUntill(stream, c => c == '\"', out last);
-                while (stream.Position < stream.Length)
+                char c = s.FirstOrDefault(ch => ch != ' ' && ch != '\t');
+                if (c == default(char))
+                    return "";
+                return s.Substring(s.IndexOf(c));
+            };
+
+            Func<string, string> PeekWord = s =>
+            {
+                string ret = "";
+                foreach (var c in s)
+                    if (LineEnd.Contains(c) || c == ' ' || c == '\t') break;
+                    else ret += c;
+                return ret;
+            };
+
+            Func<string, int, string> PeekValue = (str, cnt) =>
+            {
+                var s = RemoveSpaceAtFront(str);
+                var first = PeekWord(s);
+                if (first.Length <= 0)
+                    return "";
+                if (first[0] != '"')
+                    return first;
+                if (cnt == 0)
+                    return first;
+                if (cnt == 1)
+                    return "";
+                var sub = s.Substring(1, s.LastIndexOf('"') - 1);
+                if(cnt % 2 == 1)
                 {
-                    Logging.Assert(last == '\"', "Syntax error : unbalanced parentheses, the Key is " + key + ", the Last is " + last);
-                    string skip = ReadUntill(stream, c => !bound.Contains(c), out last);
-                    if (skip.Length == 0)
+                    sub = sub.Substring(0, sub.LastIndexOf('"'));
+                }
+                return sub;
+            };
+
+            string key = "";
+            string value = "";
+            int count = 0;
+
+            foreach (var v in contents)
+            {
+                var line = v;
+                if (count % 2 == 0)
+                {
+                    var first = PeekWord(RemoveSpaceAtFront(line));
+                    if (first.ToLower().Contains("addon"))
                     {
-                        v += '\"';
-                        v += ReadUntill(stream, c => c == '\"', out last, last);
+                        if (key.Length > 0)
+                        {
+                            AddValue(key, PeekValue(value, count));
+                        }
+                        key = first;
+                        value = RemoveSpaceAtFront(RemoveSpaceAtFront(line).Substring(first.Length + 1));
+                        count = value.Count(c => c.Equals('"')); ;
                     }
                     else
                     {
-                        string next = ReadUntill(stream, c => bound.Contains(c), out last, last);
-                        if (last != '\"' && IsKey(next))
-                        {
-                            AddValue(key, v);
-                            ReadValueForKey(stream, next, bound);
-                            break;
-                        }
-                        //else
-                        v += skip + next + ReadUntill(stream, c => c == '\"', out last, last);
+                        value += v;
+                        count += v.Count(c => c.Equals('"'));
                     }
                 }
-            }
-            else
-            {
-                string v = ReadUntill(stream, c => bound.Contains(c), out last, last);
-                AddValue(key, v);
+                else
+                {
+                    value += v;
+                    count += v.Count(c => c.Equals('"'));
+                }
             }
         }
+        
+        
 
 
 

@@ -78,7 +78,7 @@ namespace L4D2ModManager
             };
             var timeoutThread = new System.Threading.Thread(new System.Threading.ThreadStart(timeoutAction));
             timeoutThread.Start();
-            timeoutThread.Join(5000);
+            timeoutThread.Join(3000);
             if (Timeout)
                 return;
             string jsonResult = Process.StandardOutput.ReadLine();

@@ -123,7 +123,7 @@ namespace L4D2ModManager
             {
                 if (Level.Equals(0))
                     return "[root]";
-                if (Level.Equals(1))
+                if (Level.Equals(1) || Parent == null)
                     return Name;
                 return Parent.ToString() + '.' + Name;
             }
