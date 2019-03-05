@@ -22,11 +22,13 @@ The screenshot of the software is just like below :
 - Classify MODs by tags
 - Classify MODs by VPK files
 - Custom category and classification rules
+- Custom UI
 - Detect conflicts by categories
 - Set On/Off or Subscribe/Unsubscribe without launching game
 
 ## Incomplete functions
 - Download/Update MODs without launching game
+- Classify MODs manually
 
 ## How to download it
 Here is the ZIP file link : [Download](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
@@ -56,13 +58,43 @@ The second part is classification rules, using results of regexes to classify MO
 
 **Expression**
 
-In logic property, using `<ReferenceName>` to present the result value (success/failed) of regex which named `ReferenceName`, using `&` `|` and '!'  to present logical operation, using `()` to change operation order.
+In logic property, using `<ReferenceName>` to present the result value (success/failed) of regex which named `ReferenceName`, using `&` `|` and '!'  to present logical operation, using `()` to change operation order. And, you can use `<RuleIndex>` (e.g.`<1>`) to present a logic result above.
 
 In category property, you need to give a keyword of the target category, if different categories sharing the same keyword, you can use operation dot (`.`) to specialize the target category. The first usage is using category level: `1` means category while `2` means subcategory, so you can use `1.survivors` or `2.zoey`; The second usage is using the relationship between parent and child, such as `survivors.zoey`. What's more? You can use captures in regexes to replace strings here, the format is `<ReferenceName.CaptureIndex>`.
 
 **Example**
 
 Here is an example, the MODs that contains a model file of survivors are belong to the survivors category, so we created a regex which named `Survivor` to match the model files in VPK file, at the same time, we can capture the survivor's name which contained in the file name, then the expression `<Survivor>` in logic property means match result of the regex `Survivor`, if successful, the MOD will be classified to the survivor's category which is present by a capture expression `<Survivor.1>`.
+
+## How to costom UI
+You can add column in list view and custom information displayed in information box. But you only can do it by modify the configure file in JSON format.
+- Add column : `view-list.ini`
+- Modify information box : `list-box.ini`
+
+Both of them are write in the format below :
+
+`[{1},{2},{3},...]`
+
+Each `{}` contains an element which is required at least two value : `Header` and `Reflection`, `Header` is whatever you like, `Reflection` is the key of content, all valid keys are displayed below:
+- FileName
+- FileSize
+- PublishedId
+- Category
+- Title
+- Author
+- Description
+- Tags
+- ImageURL
+- Version
+- URL
+- OwnerId
+- Score
+
+So, you can write your `view-list.ini` just like this : 
+
+`[{"Header":"Local File Name","Reflection":"FileName"},{"Header":"Owner Steam ID","Reflection":"OwnerId"}]`
+ 
+ and then you will have two new columns in your view list.
 
 ## Development environment
 - .NET 4.5.2
@@ -113,17 +145,21 @@ cxw39@foxmail.com
 - 将MOD按标签分类
 - 将MOD按VPK文件包含内容分类
 - 自定义分类和分类方案
+- 自定义部分界面
 - 按分类检测MOD冲突
 - 在软件内完成设置MOD的开启/关闭、以及订阅/取消订阅等操作
 
 ## 未完成的功能
 - 在软件内完成MOD的下载/更新等操作
+- 手动分类
 
 ## 下载方式
 压缩包下载链接：[下载](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
 
 ## 如何自定义分类和分类方案
 这个工具允许你创建分类和用于在读取VPK文件时使用的分类规则
+
+(附：中文版的分类配置文件[下载](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Introduction/simple-chinese/patch/patch.zip)，可能容易看懂一点)
 
 ### 自定义分类
 界面如下：
@@ -154,6 +190,36 @@ cxw39@foxmail.com
 **示例**
 
 我们认为如果MOD的VPK文件中包含了求生者的模型文件则其应该属于求生者分类，所以我们先定义了引用标识符为`Survivor`的正则表达式来匹配刚刚说VPK中的模型文件，同时我们还能通过正则表达式捕获包含在文件名中的求生者的名字，然后在命中逻辑中的`<Survivor>`表示正则表达式`Survivor`的匹配结果，如果成功，MOD就会被分类到捕获表达式`<Survivor.1>`对应的求生者分类中。
+
+### 自定义界面
+你可以通过编辑JSON格式配置文件的方式来自定义增加列表显示的内容和右侧信息窗显示的内容
+- 添加列 : `view-list.ini`
+- 编辑信息窗 : `list-box.ini`
+
+基本格式如下 :
+
+`[{1},{2},{3},...]`
+
+每一个大括号 `{}` 都包含一个信息元素，每个信息元素要求至少提供`Header`和`Reflection`两个信息，`Header`是随便起个名字，`Reflection`是一个给定的内容关键字，所有可用的关键字如下：
+- FileName ：文件名
+- FileSize ：文件大小
+- PublishedId ：物品的发布ID
+- Category ：软件中分类
+- Title ：MOD标题
+- Author ：作者
+- Description ：描述
+- Tags ：Steam标签
+- ImageURL ：预览图地址
+- Version ：版本号
+- URL ：MOD地址
+- OwnerId ：发布者ID
+- Score ：Steam评分
+
+那打个比方，`view-list.ini`的内容就可以像下面这样： 
+
+`[{"Header":"版本","Reflection":"Version"},{"Header":"评分","Reflection":"Score"}]`
+ 
+然后界面上的列表就会多出两列.
 
 ## 开发环境
 - .NET 4.5.2
