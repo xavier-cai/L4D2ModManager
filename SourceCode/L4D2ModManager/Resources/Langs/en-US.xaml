@@ -40,7 +40,7 @@
     <s:String x:Key="Menu_Language">Language</s:String>
     <s:String x:Key="Text_OK">OK</s:String>
     <s:String x:Key="Info_About">This is a free open-source software created by Xavier Cai</s:String>
-    <s:String x:Key="Info_ChangeLanguage">The category information which is saved in [category.ini] will not be changed unless you delete it</s:String>
+    <s:String x:Key="Info_ChangeLanguage">The category information which is saved in [category.ini] will not be modified to selected language unless you edit it by yourself or just delete it</s:String>
     <s:String x:Key="Info_FindPath">Find path</s:String>
     <s:String x:Key="Info_CheckPath">Please specific the game install path and ensure its validity</s:String>
     <s:String x:Key="Info_LoadStart">Start loading...</s:String>

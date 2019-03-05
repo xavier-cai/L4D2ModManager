@@ -61,7 +61,7 @@
     <s:String x:Key="Menu_Language">语言(Language)</s:String>
     <s:String x:Key="Text_OK">确认</s:String>
     <s:String x:Key="Info_About">这是一款由 Xavier Cai 创建的免费开源软件</s:String>
-    <s:String x:Key="Info_ChangeLanguage">保存在category.ini中的分类信息不会随语言设置的变化而被修改，除非你手动删除该文件</s:String>
+    <s:String x:Key="Info_ChangeLanguage">保存在category.ini中的分类信息不会随语言设置的变化而被修改，除非你手动编辑或删除该文件</s:String>
     <s:String x:Key="Info_FindPath">找到路径</s:String>
     <s:String x:Key="Info_CheckPath">请指定游戏路径或确定路径有效性</s:String>
     <s:String x:Key="Info_LoadStart">开始加载...</s:String>

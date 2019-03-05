@@ -70,7 +70,7 @@ namespace L4D2ModManager
             [Newtonsoft.Json.JsonIgnore]
             public Category Parent { get; private set; } = null;
             public List<Category> Children = new List<Category>();
-            public int Level { get; private set; } = 0;
+            public int Level { get; set; } = 0;
             public bool SingletonResource { get; set; } = false;
 
             private Category() { }

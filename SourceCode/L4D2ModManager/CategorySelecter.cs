@@ -20,7 +20,7 @@ namespace L4D2ModManager
                 Value = value;
                 Category = category;
                 if (!special)
-                    Converter = o => (o as L4D2Type.Category).Name;
+                    Converter = o => (o as L4D2Type.Category)?.Name;
                 else
                     Converter = o => "---" + StringAdapter.GetResource(Value as string) + "---";
             }
@@ -172,15 +172,15 @@ namespace L4D2ModManager
             Func<ViewItem, bool> predict = (item) => true;
             if (!selected.IsAll)
             {
-                var category = (SubComboBox.SelectedItem as ComboItem).Value as L4D2Type.Category;
+                var category = (SubComboBox.SelectedItem as ComboItem)?.Value as L4D2Type.Category;
                 if (selected.IsUncategorized)
                     predict = item =>
                     {
-                        if (!item.Mod.Mod.Category.Contains(category))
-                            return true;
-                        var all = category.Children;
+                        var main = (MainComboBox.SelectedItem as ComboItem)?.Value as L4D2Type.Category;
+                        Logging.Assert(main != null);
+                        var all = main.Children;
                         var have = item.Mod.Mod.Category;
-                        return all.Union(have).Count() == 0;
+                        return have.Union(all).Count() == 0;
                     };
                 else if (selected.IsIgnoreList)
                     predict = item => item.Mod.IsIgnoreCollision;
