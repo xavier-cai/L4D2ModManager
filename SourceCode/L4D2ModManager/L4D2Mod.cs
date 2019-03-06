@@ -127,10 +127,31 @@ namespace L4D2ModManager
                 var web = new System.Net.WebClient();
                 web.DownloadFile(ImageURL, filename);
             }
-            Image = System.Drawing.Image.FromFile(filename);
-            var bitmap = new System.Drawing.Bitmap(Image);
-            ImageMemoryStream = new MemoryStream();
-            bitmap.Save(ImageMemoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+            ReadImageFromFile(filename);
+        }
+
+        private void ReadImageFromFile(string filename)
+        {
+            var fileinfo = new FileInfo(filename);
+            if (fileinfo.Exists)
+            {
+                try
+                {
+                    Image = System.Drawing.Image.FromFile(filename);
+                    var bitmap = new System.Drawing.Bitmap(Image);
+                    ImageMemoryStream = new MemoryStream();
+                    bitmap.Save(ImageMemoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
+                catch (Exception e)
+                {
+
+                    if (fileinfo.Length <= 0)
+                        fileinfo.Delete();
+                    Image = null;
+                    ImageMemoryStream = null;
+                    Logging.Log("Error in reading file : " + filename + ", " + e.Message + "\r\n" + e.Source + "\r\n" + e.StackTrace, "CATCH");
+                }
+            }
         }
         
         private void HandleTags()
@@ -170,10 +191,7 @@ namespace L4D2ModManager
                 var filename = file.FullName.Replace(".vpk", '.' + ext);
                 if (File.Exists(filename))
                 {
-                    Image = Image.FromFile(filename);
-                    Bitmap bitmap = new Bitmap(Image);
-                    ImageMemoryStream = new MemoryStream();
-                    bitmap.Save(ImageMemoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    ReadImageFromFile(filename);
                     break;
                 }
             }
