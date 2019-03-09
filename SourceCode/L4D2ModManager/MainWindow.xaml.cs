@@ -135,6 +135,7 @@ namespace L4D2ModManager
             WindowCallbacks.SetPrintCallback(PrintOperation);
             WindowCallbacks.SetOperationEnableCallback(EnableOperation);
             WindowCallbacks.SetNotifyUpdateCallback(NotifyUpdate);
+
 #if DEBUG
 #else
             LoadModManager();

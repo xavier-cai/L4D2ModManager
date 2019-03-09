@@ -1,3 +1,7 @@
+version 1.0.4
+-add new universal char detector
+-fix bug: if you disable Steam API and then enable it, will cause a dump
+
 version 1.0.3
 -custom view list and content frame by configure file
 -add title and author to regex match targets

@@ -24,12 +24,15 @@ namespace L4D2ModManager
 
         public void OnStartup(object sender, StartupEventArgs e)
         {
-            Action<string, object> OnException = (str, exp) =>
+            Action<string, object> OnException = null;
+            OnException = (str, exp) =>
             {
                 try
                 {
                     var err = exp as Exception;
                     Logging.Error(str + "\r\nSource:" + err.Source + "\r\nMessage:" + err.Message + "\r\nTrace Stack:\r\n" + err.StackTrace);
+                    if (err.InnerException != null)
+                        OnException("innner : ", err.InnerException);
                 }
                 catch
                 {

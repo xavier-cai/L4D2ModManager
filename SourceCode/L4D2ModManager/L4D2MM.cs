@@ -156,21 +156,23 @@ namespace L4D2ModManager
         {
             Logging.Log("enable Steam " + enable.ToString());
             if (m_steam != null && !enable)
+            {
+                m_steam.Dispose();
                 m_steam = null;
+            }
             else if (m_steam == null && enable)
             {
                 WindowCallbacks.Print(StringAdapter.GetInfo("LinkToSteam"));
                 m_steam = new Facepunch.Steamworks.Client(m_appid);
-                if (m_steam.SteamId <= 0)
+                if(m_steam != null && m_steam.SteamId <= 0)
                 {
+                    m_steam.Dispose();
                     m_steam = null;
-                    WindowCallbacks.Print(StringAdapter.GetInfo("LinkToSteamFailed"));
                 }
-                else
-                {
+                if(m_steam != null)
                     WindowCallbacks.Print(StringAdapter.GetInfo("LinkToSteamUser") + " : " + m_steam.Username);
-                    //LoadSteamWorkshop();
-                }
+                else
+                    WindowCallbacks.Print(StringAdapter.GetInfo("LinkToSteamFailed"));
             }
             return m_steam != null || !enable;
         }

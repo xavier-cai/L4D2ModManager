@@ -163,6 +163,7 @@
     <Compile Include="Fork\Facepunch.Steamworks\SteamNative\SteamNative.Types.cs" />
     <Compile Include="Fork\Facepunch.Steamworks\Utility.cs" />
     <Compile Include="Fork\Facepunch.Steamworks\Utility\SourceServerQuery.cs" />
+    <Compile Include="Fork\Notepadplusplus\Uchardet.cs" />
     <Compile Include="L4D2MM.cs" />
     <Compile Include="L4D2Mod.cs" />
     <Compile Include="L4D2Resource.cs" />
@@ -337,6 +338,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Facepunch.Steamworks.dll" />
+    <Content Include="uchardet.dll" />
     <Resource Include="icon128.ico" />
     <Content Include="Newtonsoft.Json.dll" />
     <Resource Include="Resources\Icon\icon.png" />

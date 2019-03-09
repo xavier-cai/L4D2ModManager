@@ -47,6 +47,17 @@ namespace L4D2ModManager
 
         private Encoding DetectEncoding(Stream stream)
         {
+            //notepad++
+            if (true)
+            {
+                try
+                {
+                    return Notepadplusplus.UcharDetector.Detect(stream);
+                }
+                catch { }
+                return System.Text.Encoding.ASCII;
+            }
+
             long position = stream.Position;
             stream.Seek(0, SeekOrigin.Begin);
             var detectionLength = 0;
@@ -89,6 +100,8 @@ namespace L4D2ModManager
 
             Func<string, string> RemoveSpaceAtFront = s =>
             {
+                if (s.Length <= 0)
+                    return s;
                 char c = s.FirstOrDefault(ch => ch != ' ' && ch != '\t');
                 if (c == default(char))
                     return "";
