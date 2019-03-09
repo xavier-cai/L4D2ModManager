@@ -29,8 +29,7 @@ namespace L4D2ModManager
 
         private HashSet<L4D2Type.Category> m_category;
         static public Dictionary<string, L4D2Type.Category> FastCategoryMatchMap = new Dictionary<string, L4D2Type.Category>();
-        private List<KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>> m_responces;
-
+        
         public MemoryStream GetAndResetImageMemoryStream()
         {
             ImageMemoryStream.Seek(0, SeekOrigin.Begin);
@@ -201,7 +200,9 @@ namespace L4D2ModManager
 
             if (enableVpk)
             {
-                m_responces = new List<KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>>();
+                List<KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>> m_responces = new List<KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>>();
+                Action<string, Action<L4D2Mod, SharpVPK.VpkDirectory>> AppendResponce = (regex, responce) =>
+                    m_responces.Add(new KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>(regex, responce));
                 AppendResponce(" ", HandleRoot);
                 AppendResponce("models/prop.*", HandleProps);
                 AppendResponce("models/infected", HandleInfected);
@@ -277,11 +278,6 @@ namespace L4D2ModManager
         {
             DoInitialize();
             LoadLocalFile(file, enableVpk);
-        }
-
-        void AppendResponce(string regex, Action<L4D2Mod, SharpVPK.VpkDirectory> responce)
-        {
-            m_responces.Add(new KeyValuePair<string, Action<L4D2Mod, SharpVPK.VpkDirectory>>(regex, responce));
         }
 
         static void HandleRoot(L4D2Mod o, SharpVPK.VpkDirectory dir)
