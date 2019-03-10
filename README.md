@@ -102,8 +102,6 @@ So, you can write your `view-list.ini` just like this :
 - WPF (Windows Presentation Foundation)
 
 ## Library and packages
-- System.Drawing
-- System.Net.Http
 - Newtonsoft.Json (you can find dll file in this project)
 - Windows API Code Pack (install it : input the command `Install-Package WindowsAPICodePack-Shell` in the `Package Manager Console` )
 
@@ -111,7 +109,7 @@ So, you can write your `view-list.ini` just like this :
 Thanks for these excellent works, you guys really help me a lot!
 - [Facepunch/Steamworks](https://github.com/Facepunch/Facepunch.Steamworks) Steam APIs in C#
 - [maddnias/SharpVPK](https://github.com/maddnias/SharpVPK) Read VPK files
-- The Mozilla Universal Character Encoding Detector, I get it from [here](https://github.com/lucentsky/UniversalCharsetDetection)
+- The Mozilla Universal Character Encoding Detector, I get it from [here](https://github.com/lucentsky/UniversalCharsetDetection). But actually, I choosed another C++ fork of it form Notepad++, and made a C# port : https://github.com/XavierCai1996/UniversalCharacterSetDetector.
 
 I did some changes in these works for fixing bugs or extend them, you can see the changes in `ForkInfo.txt`.
 
@@ -227,8 +225,6 @@ cxw39@foxmail.com
 - WPF (Windows Presentation Foundation)
 
 ## 引用/库/程序包
-- System.Drawing
-- System.Net.Http
 - Newtonsoft.Json (项目文件里包含dll文件)
 - Windows API Code Pack (安装方法：在`程序包管理控制台`里面输入命令`Install-Package WindowsAPICodePack-Shell`)
 
@@ -236,7 +232,7 @@ cxw39@foxmail.com
 感谢大佬们的开源项目！
 - [Facepunch/Steamworks](https://github.com/Facepunch/Facepunch.Steamworks) Steam APIs in C#
 - [maddnias/SharpVPK](https://github.com/maddnias/SharpVPK) 读取VPK文件
-- The Mozilla Universal Character Encoding Detector, Mozilla的字符编码检测程序，我从[这里](https://github.com/lucentsky/UniversalCharsetDetection)下载的源码
+- The Mozilla Universal Character Encoding Detector, Mozilla的字符编码检测程序，我从[这里](https://github.com/lucentsky/UniversalCharsetDetection)下载的源码。实际上，我使用的是Notepad++修改的C++的版本，并做了一个C#的接口：https://github.com/XavierCai1996/UniversalCharacterSetDetector
 
 这些项目我做了一些改动来修复BUG或者完善了程序, 修改的内容纪录在 `ForkInfo.txt`里面.
 
