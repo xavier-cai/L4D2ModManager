@@ -15,7 +15,7 @@ The screenshot of the software is just like below :
 
 **Notice : If you are attending to manage your subscribed MODs, I recommend you use it after you launch your game and check whether there are some downloads or updates, beacause download/update of MODs will set them On automatically. Maybe I will solve this problem by adding download & updating function to this software.**
 
-## Functions
+## Features
 - Read subscribed items' information from Steam workshop (logined Steam is required)
 - Try read information from Steam workshop for local MOD files (players may move their subscribed items to custom MOD directory)
 - Read local VPK (MOD) files
@@ -26,11 +26,11 @@ The screenshot of the software is just like below :
 - Detect conflicts by categories
 - Set On/Off or Subscribe/Unsubscribe without launching game
 
-## Incomplete functions
+## Unsupported Features
 - Download/Update MODs without launching game
 - Classify MODs manually
 
-## How to download it
+## Download
 Here is the ZIP file link : [Download](https://github.com/XavierCai1996/L4D2ModManager/raw/master/Release/Release.zip)
 
 ## How to classify MODs by custom rules
@@ -50,7 +50,7 @@ The UI is displayed below:
 
 ![](./Introduction/english/classify.png)
 
-**Functions**
+**Introduction**
 
 The first part is regexes, you can define regexes here to match file/directory name when reading VPK file, and each regex has a reference name which will be used in the second part. Be careful, the regex is required to match the full file name or directory path.
 
@@ -105,7 +105,7 @@ So, you can write your `view-list.ini` just like this :
 - Newtonsoft.Json (you can find dll file in this project)
 - Windows API Code Pack (install it : input the command `Install-Package WindowsAPICodePack-Shell` in the `Package Manager Console` )
 
-## Used works
+## Acknowledgement
 Thanks for these excellent works, you guys really help me a lot!
 - [Facepunch/Steamworks](https://github.com/Facepunch/Facepunch.Steamworks) Steam APIs in C#
 - [maddnias/SharpVPK](https://github.com/maddnias/SharpVPK) Read VPK files
